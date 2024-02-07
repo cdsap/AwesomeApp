@@ -2,7 +2,7 @@ name: Build CI
 
 on:
   schedule:
-      - cron: '0 */3 * * *'    
+      - cron: '0 */3 * * *'
 
 concurrency:
   group: build-${{ github.ref }}
@@ -120,7 +120,7 @@ jobs:
           distribution: 'temurin'
           java-version:  17
 
-      - name: Execute assemble
+      - name: Execute local builds
         run: |
             ./gradlew clean assembleDebug
             bash replacer
@@ -135,7 +135,7 @@ jobs:
             bash replacer
             ./gradlew clean assembleDebug
             bash replacer
-           ./gradlew assembleDebug
+            ./gradlew assembleDebug
 
         env:
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
