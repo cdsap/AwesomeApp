@@ -54,7 +54,7 @@ jobs:
 
       - name: Execute assemble
         run: |
-          git status
+          git log -1
           ./gradlew assembleDebug
         env:
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
