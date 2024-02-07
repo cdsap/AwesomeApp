@@ -13,7 +13,7 @@ talaiot {
             bucket = "demo2"
             buildMetricName = "buildMetric"
             taskMetricName = "taskMetric"
-            url = System.getenv("URL")
+            url = System.getenv("INFLUX_URL")
             buildTags = listOf(io.github.cdsap.talaiot.metrics.BuildMetrics.RequestedTasks)
             taskTags = listOf(io.github.cdsap.talaiot.metrics.TaskMetrics.Task,
                 io.github.cdsap.talaiot.metrics.TaskMetrics.Module,
