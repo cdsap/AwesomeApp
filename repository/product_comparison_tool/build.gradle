@@ -1,0 +1,18 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:pdf_report_generator"))
+    implementation(project(":core:encryption_decryption_service"))
+    implementation(project(":core:batch_job_scheduler"))
+    implementation(project(":core:date_time_formatter"))
+    implementation(project(":core:push_notification_sender"))
+    implementation(project(":core:user_activity_tracker"))
+    implementation(project(":core:error_handling_framework"))
+    implementation(project(":core:image_resize_tool"))
+    implementation(project(":core:api_rate_limiter"))
+    implementation(project(":core:authentication_provider"))
+}
+        

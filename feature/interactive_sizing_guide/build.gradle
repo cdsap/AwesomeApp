@@ -1,0 +1,14 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:budget_tracker"))
+    implementation(project(":domain:collaborative_shopping_lists"))
+    implementation(project(":domain:return_center_simplified"))
+    implementation(project(":domain:social_shopping_network"))
+    implementation(project(":domain:virtual_try_on_suite"))
+    implementation(project(":domain:product_comparison_tool"))
+}
+        

@@ -1,0 +1,13 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:personal_shopper_ai"))
+    implementation(project(":domain:product_discovery_lens"))
+    implementation(project(":domain:interactive_sizing_guide"))
+    implementation(project(":domain:style_advisor"))
+    implementation(project(":domain:community_qa_forum"))
+}
+        

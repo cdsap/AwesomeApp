@@ -1,0 +1,12 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:logging-services"))
+    implementation(project(":api:headers-management"))
+    implementation(project(":api:analytics-tools"))
+    implementation(project(":api:request-body"))
+}
+        

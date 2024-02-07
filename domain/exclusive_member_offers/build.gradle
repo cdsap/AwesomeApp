@@ -1,0 +1,16 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:customizable_alerts"))
+    implementation(project(":repository:in_app_currency"))
+    implementation(project(":repository:deal_of_the_day_alert"))
+    implementation(project(":repository:loyalty_rewards_hub"))
+    implementation(project(":repository:live_chat_support"))
+    implementation(project(":repository:smart_wishlist_analyzer"))
+    implementation(project(":repository:personal_shopper_ai"))
+    implementation(project(":repository:product_comparison_tool"))
+}
+        

@@ -1,0 +1,15 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:inventory_insights"))
+    implementation(project(":domain:exclusive_member_offers"))
+    implementation(project(":domain:augmented_reality_showroom"))
+    implementation(project(":domain:gift_finder_assistant"))
+    implementation(project(":domain:family_account_management"))
+    implementation(project(":domain:eco_friendly_picks"))
+    implementation(project(":domain:customizable_alerts"))
+}
+        

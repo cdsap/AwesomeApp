@@ -1,0 +1,27 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:api-routing"))
+    implementation(project(":api:integration-patterns"))
+    implementation(project(":api:data-models"))
+    implementation(project(":api:response-formats"))
+    implementation(project(":api:mock-services"))
+    implementation(project(":api:api-testing"))
+    implementation(project(":api:logging-services"))
+    implementation(project(":api:restful-principles"))
+    implementation(project(":api:webhook-implementations"))
+    implementation(project(":api:authorization-services"))
+    implementation(project(":api:deployment-strategies"))
+    implementation(project(":api:scaling-techniques"))
+    implementation(project(":api:versioning-strategies"))
+    implementation(project(":api:authentication-services"))
+    implementation(project(":api:analytics-tools"))
+    implementation(project(":api:headers-management"))
+    implementation(project(":api:middleware-components"))
+    implementation(project(":api:cache-strategies"))
+    implementation(project(":api:service-endpoints"))
+}
+        

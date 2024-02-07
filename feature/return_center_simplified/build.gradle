@@ -1,0 +1,12 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:brand_story_spotlight"))
+    implementation(project(":domain:customizable_alerts"))
+    implementation(project(":domain:marketplace_access"))
+    implementation(project(":domain:exclusive_member_offers"))
+}
+        

@@ -1,0 +1,24 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:response-formats"))
+    implementation(project(":api:monitoring-tools"))
+    implementation(project(":api:middleware-components"))
+    implementation(project(":api:domain-entities"))
+    implementation(project(":api:versioning-strategies"))
+    implementation(project(":api:webhook-implementations"))
+    implementation(project(":api:rate-limiting"))
+    implementation(project(":api:service-endpoints"))
+    implementation(project(":api:data-validation"))
+    implementation(project(":api:serialization-deserialization"))
+    implementation(project(":api:api-gateways"))
+    implementation(project(":api:error-handling"))
+    implementation(project(":api:logging-services"))
+    implementation(project(":api:authorization-services"))
+    implementation(project(":api:performance-optimization"))
+    implementation(project(":api:session-management"))
+}
+        

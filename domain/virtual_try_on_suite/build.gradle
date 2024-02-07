@@ -1,0 +1,15 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:subscription_box_builder"))
+    implementation(project(":repository:personal_shopper_ai"))
+    implementation(project(":repository:brand_story_spotlight"))
+    implementation(project(":repository:pricematch_guarantee"))
+    implementation(project(":repository:gift_finder_assistant"))
+    implementation(project(":repository:product_comparison_tool"))
+    implementation(project(":repository:restock_notification_service"))
+}
+        

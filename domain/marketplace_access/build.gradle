@@ -1,0 +1,16 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:cross_border_shopping_facilitator"))
+    implementation(project(":repository:event_ticketing_experiences"))
+    implementation(project(":repository:return_center_simplified"))
+    implementation(project(":repository:deal_of_the_day_alert"))
+    implementation(project(":repository:product_comparison_tool"))
+    implementation(project(":repository:style_advisor"))
+    implementation(project(":repository:smart_wishlist_analyzer"))
+    implementation(project(":repository:community_qa_forum"))
+}
+        

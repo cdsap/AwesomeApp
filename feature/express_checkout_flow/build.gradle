@@ -1,0 +1,20 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:brand_story_spotlight"))
+    implementation(project(":domain:community_qa_forum"))
+    implementation(project(":domain:customer_review_digest"))
+    implementation(project(":domain:live_chat_support"))
+    implementation(project(":domain:digital_receipt_vault"))
+    implementation(project(":domain:inventory_insights"))
+    implementation(project(":domain:subscription_box_builder"))
+    implementation(project(":domain:budget_tracker"))
+    implementation(project(":domain:product_comparison_tool"))
+    implementation(project(":domain:exclusive_member_offers"))
+    implementation(project(":domain:style_advisor"))
+    implementation(project(":domain:social_shopping_network"))
+}
+        

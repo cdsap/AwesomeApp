@@ -1,0 +1,20 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:date_time_formatter"))
+    implementation(project(":core:distributed_lock_manager"))
+    implementation(project(":core:session_storage_handler"))
+    implementation(project(":core:text_search_engine"))
+    implementation(project(":core:password_strength_evaluator"))
+    implementation(project(":core:query_parameter_extractor"))
+    implementation(project(":core:error_handling_framework"))
+    implementation(project(":core:batch_job_scheduler"))
+    implementation(project(":core:dynamic_query_builder"))
+    implementation(project(":core:regex_pattern_matcher"))
+    implementation(project(":core:json_parsing_utility"))
+    implementation(project(":core:response_interceptor"))
+}
+        

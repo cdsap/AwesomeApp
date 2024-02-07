@@ -1,0 +1,15 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:batch_job_scheduler"))
+    implementation(project(":core:database_migration_assistant"))
+    implementation(project(":core:distributed_lock_manager"))
+    implementation(project(":core:logging_aspect_generator"))
+    implementation(project(":core:file_io_operations"))
+    implementation(project(":core:authorization_checker"))
+    implementation(project(":core:dynamic_query_builder"))
+}
+        

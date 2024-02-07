@@ -1,0 +1,11 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:diy_customization_studio"))
+    implementation(project(":repository:marketplace_access"))
+    implementation(project(":repository:product_discovery_lens"))
+}
+        

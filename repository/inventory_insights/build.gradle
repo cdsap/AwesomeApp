@@ -1,0 +1,10 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:user_activity_tracker"))
+    implementation(project(":core:file_io_operations"))
+}
+        

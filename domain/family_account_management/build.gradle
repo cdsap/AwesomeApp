@@ -1,0 +1,11 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:event_ticketing_experiences"))
+    implementation(project(":repository:virtual_try_on_suite"))
+    implementation(project(":repository:eco_friendly_picks"))
+}
+        

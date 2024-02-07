@@ -1,0 +1,14 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:community_qa_forum"))
+    implementation(project(":repository:personal_shopper_ai"))
+    implementation(project(":repository:live_chat_support"))
+    implementation(project(":repository:express_checkout_flow"))
+    implementation(project(":repository:product_discovery_lens"))
+    implementation(project(":repository:family_account_management"))
+}
+        

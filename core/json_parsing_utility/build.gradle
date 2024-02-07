@@ -1,0 +1,18 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:interceptors"))
+    implementation(project(":api:client-sdk"))
+    implementation(project(":api:data-validation"))
+    implementation(project(":api:restful-principles"))
+    implementation(project(":api:api-routing"))
+    implementation(project(":api:middleware-components"))
+    implementation(project(":api:api-gateways"))
+    implementation(project(":api:mock-services"))
+    implementation(project(":api:response-formats"))
+    implementation(project(":api:rate-limiting"))
+}
+        

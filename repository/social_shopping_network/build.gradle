@@ -1,0 +1,16 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:authentication_provider"))
+    implementation(project(":core:xml_to_object_converter"))
+    implementation(project(":core:geo_location_mapper"))
+    implementation(project(":core:cache_management_system"))
+    implementation(project(":core:data_analytics_engine"))
+    implementation(project(":core:encryption_decryption_service"))
+    implementation(project(":core:api_rate_limiter"))
+    implementation(project(":core:email_validation_util"))
+}
+        

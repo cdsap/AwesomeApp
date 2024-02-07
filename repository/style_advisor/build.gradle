@@ -1,0 +1,10 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:api_dependency_injector"))
+    implementation(project(":core:password_strength_evaluator"))
+}
+        

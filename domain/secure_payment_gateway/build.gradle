@@ -1,0 +1,11 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:style_advisor"))
+    implementation(project(":repository:deal_of_the_day_alert"))
+    implementation(project(":repository:augmented_reality_showroom"))
+}
+        

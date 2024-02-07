@@ -1,0 +1,28 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:pdf_report_generator"))
+    implementation(project(":core:geo_location_mapper"))
+    implementation(project(":core:data_analytics_engine"))
+    implementation(project(":core:batch_job_scheduler"))
+    implementation(project(":core:database_migration_assistant"))
+    implementation(project(":core:http_request_builder"))
+    implementation(project(":core:api_rate_limiter"))
+    implementation(project(":core:currency_exchange_calculator"))
+    implementation(project(":core:locale_message_resolver"))
+    implementation(project(":core:dynamic_query_builder"))
+    implementation(project(":core:image_resize_tool"))
+    implementation(project(":core:regex_pattern_matcher"))
+    implementation(project(":core:web_socket_messenger"))
+    implementation(project(":core:password_strength_evaluator"))
+    implementation(project(":core:xml_to_object_converter"))
+    implementation(project(":core:encryption_decryption_service"))
+    implementation(project(":core:version_upgrade_manager"))
+    implementation(project(":core:api_dependency_injector"))
+    implementation(project(":core:authentication_provider"))
+    implementation(project(":core:session_storage_handler"))
+}
+        

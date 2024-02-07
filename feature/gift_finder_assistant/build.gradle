@@ -1,0 +1,38 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:order_customization_zone"))
+    implementation(project(":domain:diy_customization_studio"))
+    implementation(project(":domain:return_center_simplified"))
+    implementation(project(":domain:virtual_try_on_suite"))
+    implementation(project(":domain:smart_wishlist_analyzer"))
+    implementation(project(":domain:quickshop_scanner"))
+    implementation(project(":domain:product_comparison_tool"))
+    implementation(project(":domain:digital_receipt_vault"))
+    implementation(project(":domain:cross_border_shopping_facilitator"))
+    implementation(project(":domain:gift_finder_assistant"))
+    implementation(project(":domain:deal_of_the_day_alert"))
+    implementation(project(":domain:restock_notification_service"))
+    implementation(project(":domain:social_shopping_network"))
+    implementation(project(":domain:collaborative_shopping_lists"))
+    implementation(project(":domain:community_qa_forum"))
+    implementation(project(":domain:loyalty_rewards_hub"))
+    implementation(project(":domain:live_chat_support"))
+    implementation(project(":domain:in_app_currency"))
+    implementation(project(":domain:brand_story_spotlight"))
+    implementation(project(":domain:inventory_insights"))
+    implementation(project(":domain:eco_friendly_picks"))
+    implementation(project(":domain:event_ticketing_experiences"))
+    implementation(project(":domain:subscription_box_builder"))
+    implementation(project(":domain:customer_review_digest"))
+    implementation(project(":domain:secure_payment_gateway"))
+    implementation(project(":domain:budget_tracker"))
+    implementation(project(":domain:augmented_reality_showroom"))
+    implementation(project(":domain:personal_shopper_ai"))
+    implementation(project(":domain:product_discovery_lens"))
+    implementation(project(":domain:customizable_alerts"))
+}
+        

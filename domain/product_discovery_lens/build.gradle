@@ -1,0 +1,37 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:budget_tracker"))
+    implementation(project(":repository:interactive_sizing_guide"))
+    implementation(project(":repository:instant_rebate_finder"))
+    implementation(project(":repository:in_app_currency"))
+    implementation(project(":repository:social_shopping_network"))
+    implementation(project(":repository:augmented_reality_showroom"))
+    implementation(project(":repository:secure_payment_gateway"))
+    implementation(project(":repository:exclusive_member_offers"))
+    implementation(project(":repository:eco_friendly_picks"))
+    implementation(project(":repository:return_center_simplified"))
+    implementation(project(":repository:live_chat_support"))
+    implementation(project(":repository:brand_story_spotlight"))
+    implementation(project(":repository:family_account_management"))
+    implementation(project(":repository:community_qa_forum"))
+    implementation(project(":repository:loyalty_rewards_hub"))
+    implementation(project(":repository:subscription_box_builder"))
+    implementation(project(":repository:personal_shopper_ai"))
+    implementation(project(":repository:inventory_insights"))
+    implementation(project(":repository:gift_finder_assistant"))
+    implementation(project(":repository:collaborative_shopping_lists"))
+    implementation(project(":repository:virtual_try_on_suite"))
+    implementation(project(":repository:product_comparison_tool"))
+    implementation(project(":repository:customizable_alerts"))
+    implementation(project(":repository:cross_border_shopping_facilitator"))
+    implementation(project(":repository:smart_wishlist_analyzer"))
+    implementation(project(":repository:express_checkout_flow"))
+    implementation(project(":repository:digital_receipt_vault"))
+    implementation(project(":repository:shipping_tracker_pro"))
+    implementation(project(":repository:deal_of_the_day_alert"))
+}
+        

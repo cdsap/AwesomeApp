@@ -1,0 +1,10 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:customer_review_digest"))
+    implementation(project(":domain:deal_of_the_day_alert"))
+}
+        

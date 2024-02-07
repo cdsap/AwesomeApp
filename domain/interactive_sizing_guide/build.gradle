@@ -1,0 +1,33 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:product_discovery_lens"))
+    implementation(project(":repository:augmented_reality_showroom"))
+    implementation(project(":repository:loyalty_rewards_hub"))
+    implementation(project(":repository:social_shopping_network"))
+    implementation(project(":repository:secure_payment_gateway"))
+    implementation(project(":repository:marketplace_access"))
+    implementation(project(":repository:virtual_try_on_suite"))
+    implementation(project(":repository:digital_receipt_vault"))
+    implementation(project(":repository:flash_sale_countdown"))
+    implementation(project(":repository:customer_review_digest"))
+    implementation(project(":repository:restock_notification_service"))
+    implementation(project(":repository:style_advisor"))
+    implementation(project(":repository:quickshop_scanner"))
+    implementation(project(":repository:product_comparison_tool"))
+    implementation(project(":repository:budget_tracker"))
+    implementation(project(":repository:event_ticketing_experiences"))
+    implementation(project(":repository:gift_finder_assistant"))
+    implementation(project(":repository:order_customization_zone"))
+    implementation(project(":repository:subscription_box_builder"))
+    implementation(project(":repository:smart_wishlist_analyzer"))
+    implementation(project(":repository:community_qa_forum"))
+    implementation(project(":repository:deal_of_the_day_alert"))
+    implementation(project(":repository:family_account_management"))
+    implementation(project(":repository:in_app_currency"))
+    implementation(project(":repository:diy_customization_studio"))
+}
+        

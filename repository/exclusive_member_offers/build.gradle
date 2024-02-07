@@ -1,0 +1,15 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:http_request_builder"))
+    implementation(project(":core:background_task_executor"))
+    implementation(project(":core:web_socket_messenger"))
+    implementation(project(":core:image_resize_tool"))
+    implementation(project(":core:dynamic_query_builder"))
+    implementation(project(":core:session_storage_handler"))
+    implementation(project(":core:performance_monitoring_tool"))
+}
+        

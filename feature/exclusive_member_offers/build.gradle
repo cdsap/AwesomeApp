@@ -1,0 +1,11 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:smart_wishlist_analyzer"))
+    implementation(project(":domain:marketplace_access"))
+    implementation(project(":domain:style_advisor"))
+}
+        

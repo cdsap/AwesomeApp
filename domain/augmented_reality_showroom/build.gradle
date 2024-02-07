@@ -1,0 +1,25 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:instant_rebate_finder"))
+    implementation(project(":repository:express_checkout_flow"))
+    implementation(project(":repository:return_center_simplified"))
+    implementation(project(":repository:cross_border_shopping_facilitator"))
+    implementation(project(":repository:social_shopping_network"))
+    implementation(project(":repository:flash_sale_countdown"))
+    implementation(project(":repository:family_account_management"))
+    implementation(project(":repository:exclusive_member_offers"))
+    implementation(project(":repository:shipping_tracker_pro"))
+    implementation(project(":repository:deal_of_the_day_alert"))
+    implementation(project(":repository:restock_notification_service"))
+    implementation(project(":repository:live_chat_support"))
+    implementation(project(":repository:pricematch_guarantee"))
+    implementation(project(":repository:gift_finder_assistant"))
+    implementation(project(":repository:interactive_sizing_guide"))
+    implementation(project(":repository:order_customization_zone"))
+    implementation(project(":repository:secure_payment_gateway"))
+}
+        

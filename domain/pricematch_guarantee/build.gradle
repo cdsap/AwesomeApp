@@ -1,0 +1,11 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:diy_customization_studio"))
+    implementation(project(":repository:augmented_reality_showroom"))
+    implementation(project(":repository:exclusive_member_offers"))
+}
+        

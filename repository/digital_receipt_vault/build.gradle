@@ -1,0 +1,11 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:dynamic_query_builder"))
+    implementation(project(":core:image_resize_tool"))
+    implementation(project(":core:xml_to_object_converter"))
+}
+        

@@ -1,0 +1,35 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:style_advisor"))
+    implementation(project(":domain:product_comparison_tool"))
+    implementation(project(":domain:return_center_simplified"))
+    implementation(project(":domain:secure_payment_gateway"))
+    implementation(project(":domain:budget_tracker"))
+    implementation(project(":domain:product_discovery_lens"))
+    implementation(project(":domain:digital_receipt_vault"))
+    implementation(project(":domain:quickshop_scanner"))
+    implementation(project(":domain:order_customization_zone"))
+    implementation(project(":domain:exclusive_member_offers"))
+    implementation(project(":domain:loyalty_rewards_hub"))
+    implementation(project(":domain:customer_review_digest"))
+    implementation(project(":domain:customizable_alerts"))
+    implementation(project(":domain:interactive_sizing_guide"))
+    implementation(project(":domain:gift_finder_assistant"))
+    implementation(project(":domain:flash_sale_countdown"))
+    implementation(project(":domain:smart_wishlist_analyzer"))
+    implementation(project(":domain:social_shopping_network"))
+    implementation(project(":domain:instant_rebate_finder"))
+    implementation(project(":domain:collaborative_shopping_lists"))
+    implementation(project(":domain:family_account_management"))
+    implementation(project(":domain:virtual_try_on_suite"))
+    implementation(project(":domain:in_app_currency"))
+    implementation(project(":domain:brand_story_spotlight"))
+    implementation(project(":domain:augmented_reality_showroom"))
+    implementation(project(":domain:inventory_insights"))
+    implementation(project(":domain:pricematch_guarantee"))
+}
+        

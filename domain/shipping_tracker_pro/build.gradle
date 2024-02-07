@@ -1,0 +1,31 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:personal_shopper_ai"))
+    implementation(project(":repository:shipping_tracker_pro"))
+    implementation(project(":repository:community_qa_forum"))
+    implementation(project(":repository:style_advisor"))
+    implementation(project(":repository:family_account_management"))
+    implementation(project(":repository:product_comparison_tool"))
+    implementation(project(":repository:gift_finder_assistant"))
+    implementation(project(":repository:eco_friendly_picks"))
+    implementation(project(":repository:exclusive_member_offers"))
+    implementation(project(":repository:return_center_simplified"))
+    implementation(project(":repository:secure_payment_gateway"))
+    implementation(project(":repository:order_customization_zone"))
+    implementation(project(":repository:marketplace_access"))
+    implementation(project(":repository:collaborative_shopping_lists"))
+    implementation(project(":repository:live_chat_support"))
+    implementation(project(":repository:cross_border_shopping_facilitator"))
+    implementation(project(":repository:express_checkout_flow"))
+    implementation(project(":repository:product_discovery_lens"))
+    implementation(project(":repository:inventory_insights"))
+    implementation(project(":repository:subscription_box_builder"))
+    implementation(project(":repository:event_ticketing_experiences"))
+    implementation(project(":repository:in_app_currency"))
+    implementation(project(":repository:customer_review_digest"))
+}
+        

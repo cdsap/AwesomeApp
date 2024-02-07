@@ -1,0 +1,9 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:quickshop_scanner"))
+}
+        

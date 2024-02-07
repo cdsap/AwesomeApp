@@ -1,0 +1,17 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:marketplace_access"))
+    implementation(project(":domain:diy_customization_studio"))
+    implementation(project(":domain:restock_notification_service"))
+    implementation(project(":domain:deal_of_the_day_alert"))
+    implementation(project(":domain:return_center_simplified"))
+    implementation(project(":domain:personal_shopper_ai"))
+    implementation(project(":domain:instant_rebate_finder"))
+    implementation(project(":domain:cross_border_shopping_facilitator"))
+    implementation(project(":domain:customer_review_digest"))
+}
+        

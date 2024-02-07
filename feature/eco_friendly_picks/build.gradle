@@ -1,0 +1,11 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:customizable_alerts"))
+    implementation(project(":domain:community_qa_forum"))
+    implementation(project(":domain:gift_finder_assistant"))
+}
+        

@@ -1,0 +1,12 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:flash_sale_countdown"))
+    implementation(project(":repository:smart_wishlist_analyzer"))
+    implementation(project(":repository:budget_tracker"))
+    implementation(project(":repository:secure_payment_gateway"))
+}
+        

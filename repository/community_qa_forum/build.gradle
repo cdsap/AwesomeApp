@@ -1,0 +1,16 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:feature_toggle_switch"))
+    implementation(project(":core:logging_aspect_generator"))
+    implementation(project(":core:resource_cleanup_util"))
+    implementation(project(":core:session_storage_handler"))
+    implementation(project(":core:error_handling_framework"))
+    implementation(project(":core:json_parsing_utility"))
+    implementation(project(":core:geo_location_mapper"))
+    implementation(project(":core:dynamic_query_builder"))
+}
+        

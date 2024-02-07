@@ -1,0 +1,14 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:cross_border_shopping_facilitator"))
+    implementation(project(":repository:budget_tracker"))
+    implementation(project(":repository:marketplace_access"))
+    implementation(project(":repository:inventory_insights"))
+    implementation(project(":repository:digital_receipt_vault"))
+    implementation(project(":repository:restock_notification_service"))
+}
+        

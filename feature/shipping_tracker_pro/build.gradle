@@ -1,0 +1,14 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:event_ticketing_experiences"))
+    implementation(project(":domain:budget_tracker"))
+    implementation(project(":domain:virtual_try_on_suite"))
+    implementation(project(":domain:digital_receipt_vault"))
+    implementation(project(":domain:restock_notification_service"))
+    implementation(project(":domain:customizable_alerts"))
+}
+        

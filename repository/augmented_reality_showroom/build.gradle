@@ -1,0 +1,11 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:session_storage_handler"))
+    implementation(project(":core:push_notification_sender"))
+    implementation(project(":core:version_upgrade_manager"))
+}
+        

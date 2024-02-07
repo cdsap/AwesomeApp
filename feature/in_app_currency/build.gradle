@@ -1,0 +1,32 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":domain:order_customization_zone"))
+    implementation(project(":domain:family_account_management"))
+    implementation(project(":domain:community_qa_forum"))
+    implementation(project(":domain:customer_review_digest"))
+    implementation(project(":domain:product_discovery_lens"))
+    implementation(project(":domain:brand_story_spotlight"))
+    implementation(project(":domain:shipping_tracker_pro"))
+    implementation(project(":domain:live_chat_support"))
+    implementation(project(":domain:digital_receipt_vault"))
+    implementation(project(":domain:virtual_try_on_suite"))
+    implementation(project(":domain:inventory_insights"))
+    implementation(project(":domain:personal_shopper_ai"))
+    implementation(project(":domain:budget_tracker"))
+    implementation(project(":domain:subscription_box_builder"))
+    implementation(project(":domain:cross_border_shopping_facilitator"))
+    implementation(project(":domain:restock_notification_service"))
+    implementation(project(":domain:customizable_alerts"))
+    implementation(project(":domain:product_comparison_tool"))
+    implementation(project(":domain:in_app_currency"))
+    implementation(project(":domain:exclusive_member_offers"))
+    implementation(project(":domain:eco_friendly_picks"))
+    implementation(project(":domain:return_center_simplified"))
+    implementation(project(":domain:social_shopping_network"))
+    implementation(project(":domain:loyalty_rewards_hub"))
+}
+        

@@ -1,0 +1,17 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":repository:event_ticketing_experiences"))
+    implementation(project(":repository:smart_wishlist_analyzer"))
+    implementation(project(":repository:virtual_try_on_suite"))
+    implementation(project(":repository:digital_receipt_vault"))
+    implementation(project(":repository:order_customization_zone"))
+    implementation(project(":repository:eco_friendly_picks"))
+    implementation(project(":repository:secure_payment_gateway"))
+    implementation(project(":repository:personal_shopper_ai"))
+    implementation(project(":repository:community_qa_forum"))
+}
+        

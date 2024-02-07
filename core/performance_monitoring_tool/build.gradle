@@ -1,0 +1,10 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:cache-strategies"))
+    implementation(project(":api:authorization-services"))
+}
+        

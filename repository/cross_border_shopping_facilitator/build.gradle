@@ -1,0 +1,21 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:session_storage_handler"))
+    implementation(project(":core:file_io_operations"))
+    implementation(project(":core:geo_location_mapper"))
+    implementation(project(":core:response_interceptor"))
+    implementation(project(":core:user_activity_tracker"))
+    implementation(project(":core:image_resize_tool"))
+    implementation(project(":core:locale_message_resolver"))
+    implementation(project(":core:json_parsing_utility"))
+    implementation(project(":core:web_socket_messenger"))
+    implementation(project(":core:api_rate_limiter"))
+    implementation(project(":core:data_analytics_engine"))
+    implementation(project(":core:encryption_decryption_service"))
+    implementation(project(":core:memory_leak_detector"))
+}
+        

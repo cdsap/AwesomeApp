@@ -1,0 +1,14 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:api-testing"))
+    implementation(project(":api:cache-strategies"))
+    implementation(project(":api:analytics-tools"))
+    implementation(project(":api:session-management"))
+    implementation(project(":api:data-validation"))
+    implementation(project(":api:authorization-services"))
+}
+        

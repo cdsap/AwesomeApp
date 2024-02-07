@@ -1,0 +1,16 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:password_strength_evaluator"))
+    implementation(project(":core:performance_monitoring_tool"))
+    implementation(project(":core:feature_toggle_switch"))
+    implementation(project(":core:file_io_operations"))
+    implementation(project(":core:authentication_provider"))
+    implementation(project(":core:regex_pattern_matcher"))
+    implementation(project(":core:web_socket_messenger"))
+    implementation(project(":core:image_resize_tool"))
+}
+        

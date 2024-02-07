@@ -1,0 +1,25 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:graphql-schemas"))
+    implementation(project(":api:scaling-techniques"))
+    implementation(project(":api:api-routing"))
+    implementation(project(":api:serialization-deserialization"))
+    implementation(project(":api:configuration-management"))
+    implementation(project(":api:webhook-implementations"))
+    implementation(project(":api:request-body"))
+    implementation(project(":api:cache-strategies"))
+    implementation(project(":api:api-gateways"))
+    implementation(project(":api:data-models"))
+    implementation(project(":api:performance-optimization"))
+    implementation(project(":api:logging-services"))
+    implementation(project(":api:network-entities"))
+    implementation(project(":api:data-validation"))
+    implementation(project(":api:repository-entities"))
+    implementation(project(":api:security-policies"))
+    implementation(project(":api:rate-limiting"))
+}
+        

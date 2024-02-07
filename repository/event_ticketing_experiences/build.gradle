@@ -1,0 +1,18 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:file_io_operations"))
+    implementation(project(":core:web_socket_messenger"))
+    implementation(project(":core:xml_to_object_converter"))
+    implementation(project(":core:currency_exchange_calculator"))
+    implementation(project(":core:api_dependency_injector"))
+    implementation(project(":core:data_analytics_engine"))
+    implementation(project(":core:http_request_builder"))
+    implementation(project(":core:encryption_decryption_service"))
+    implementation(project(":core:geo_location_mapper"))
+    implementation(project(":core:json_parsing_utility"))
+}
+        

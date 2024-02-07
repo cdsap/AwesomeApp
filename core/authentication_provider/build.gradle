@@ -1,0 +1,19 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:integration-patterns"))
+    implementation(project(":api:network-entities"))
+    implementation(project(":api:serialization-deserialization"))
+    implementation(project(":api:query-parameters"))
+    implementation(project(":api:scaling-techniques"))
+    implementation(project(":api:monitoring-tools"))
+    implementation(project(":api:restful-principles"))
+    implementation(project(":api:response-formats"))
+    implementation(project(":api:rate-limiting"))
+    implementation(project(":api:mock-services"))
+    implementation(project(":api:performance-optimization"))
+}
+        

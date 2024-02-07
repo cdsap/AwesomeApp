@@ -1,0 +1,9 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":core:error_handling_framework"))
+}
+        

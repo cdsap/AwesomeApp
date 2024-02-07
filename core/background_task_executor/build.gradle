@@ -1,0 +1,38 @@
+plugins {
+  id("awesome.androidlib.plugin")
+}
+
+dependencies {
+    
+    implementation(project(":api:api-gateways"))
+    implementation(project(":api:graphql-schemas"))
+    implementation(project(":api:client-sdk"))
+    implementation(project(":api:third-party-integrations"))
+    implementation(project(":api:security-policies"))
+    implementation(project(":api:integration-patterns"))
+    implementation(project(":api:query-parameters"))
+    implementation(project(":api:network-entities"))
+    implementation(project(":api:service-endpoints"))
+    implementation(project(":api:scaling-techniques"))
+    implementation(project(":api:api-documentation"))
+    implementation(project(":api:api-testing"))
+    implementation(project(":api:middleware-components"))
+    implementation(project(":api:mock-services"))
+    implementation(project(":api:webhook-implementations"))
+    implementation(project(":api:data-validation"))
+    implementation(project(":api:api-routing"))
+    implementation(project(":api:domain-entities"))
+    implementation(project(":api:interceptors"))
+    implementation(project(":api:authorization-services"))
+    implementation(project(":api:serialization-deserialization"))
+    implementation(project(":api:monitoring-tools"))
+    implementation(project(":api:cache-strategies"))
+    implementation(project(":api:authentication-services"))
+    implementation(project(":api:headers-management"))
+    implementation(project(":api:versioning-strategies"))
+    implementation(project(":api:repository-entities"))
+    implementation(project(":api:request-body"))
+    implementation(project(":api:response-formats"))
+    implementation(project(":api:session-management"))
+}
+        
