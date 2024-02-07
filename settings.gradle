@@ -18,12 +18,12 @@ dependencyResolutionManagement {
 
 buildCache {
     local {
-        isEnabled = !System.getenv("CI")
+        enabled = !System.getenv("CI")
     }
     remote(HttpBuildCache) {
         url = uri(System.getenv("CACHE_URL"))
-        isPush = System.getenv("CI")
-        isAllowInsecureProtocol = true
+        push = System.getenv("CI")
+        allowInsecureProtocol = true
 
     }
 }
