@@ -9,13 +9,11 @@ plugins {
 
 talaiot {
     publishers {
-        influxDb2Publisher {
-            token = System.getenv("INFLUX_TOKEN")
-            org = "demo"
-            bucket = "demo2"
+        influxDbPublisher {
+            dbName = "demo"
             buildMetricName = "buildMetric"
             taskMetricName = "taskMetric"
-            url = System.getenv("INFLUX_URL")
+            url = System.getenv("INFLUX1_URL")
             buildTags = listOf(io.github.cdsap.talaiot.metrics.BuildMetrics.RequestedTasks)
             taskTags = listOf(
                 io.github.cdsap.talaiot.metrics.TaskMetrics.Task,
