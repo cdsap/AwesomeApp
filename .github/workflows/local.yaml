@@ -1,11 +1,11 @@
-name: Build
+name: Build Local
 
 on:
   push:
     branches: [ main]
   pull_request:
   schedule:
-      - cron: '0 3 * * *' 
+      - cron: '0 3 * * *'
 
 concurrency:
   group: build-${{ github.ref }}
@@ -32,4 +32,4 @@ jobs:
 
       - name: Execute assemble
         run: |
-          
+
