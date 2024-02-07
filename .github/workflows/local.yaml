@@ -5,7 +5,7 @@ on:
     branches: [ main]
   pull_request:
   schedule:
-      - cron: '0 3 * * *'
+      - cron: '0 */3 * * *'
 
 concurrency:
   group: build-${{ github.ref }}
@@ -32,4 +32,19 @@ jobs:
 
       - name: Execute assemble
         run: |
+            ./gradlew clean assembleDebug
+            bash replacer
+            ./gradlew testDebug
+            bash replacer
+            ./gradlew testDebug
+            bash replacer
+            ./gradlew testDebug
+            ./gradlew clean assembleDebug
+            bash replacer
+            ./gradlew testDebug
 
+        env:
+            INFLUX_URL: ${{ secrets.INFLUX_URL }}
+            INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+            CACHE_URL: ${{ secrets.CACHE_URL }}
+            CI: false
