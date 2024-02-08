@@ -81,6 +81,7 @@ jobs:
         env:
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
             CACHE_URL: ${{ secrets.CACHE_URL }}
             CI: true
 
@@ -104,6 +105,7 @@ jobs:
         env:
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
             CACHE_URL: ${{ secrets.CACHE_URL }}
             CI: true
 
@@ -140,5 +142,6 @@ jobs:
         env:
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
             CACHE_URL: ${{ secrets.CACHE_URL }}
             CI: false
