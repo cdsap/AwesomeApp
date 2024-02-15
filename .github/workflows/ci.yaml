@@ -1,8 +1,7 @@
 name: Build CI
 
 on:
-  schedule:
-      - cron: '0 */2 * * *'
+
 
 concurrency:
   group: build-${{ github.ref }}
