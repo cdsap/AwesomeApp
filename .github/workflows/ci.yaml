@@ -57,7 +57,7 @@ jobs:
           echo "$MY_JSON_SECRET" > key.json
           ./gradlew assembleDebug --info
         env:
-            MY_JSON_SECRET: ${{ secrets.KEY }}
+            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
             INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
@@ -83,7 +83,7 @@ jobs:
           echo "$MY_JSON_SECRET" > key.json
           ./gradlew lintRelease
         env:
-            MY_JSON_SECRET: ${{ secrets.KEY }}
+            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
             INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
@@ -109,7 +109,7 @@ jobs:
           echo "$MY_JSON_SECRET" > key.json
           ./gradlew testDebug
         env:
-            MY_JSON_SECRET: ${{ secrets.KEY }}
+            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
             INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
