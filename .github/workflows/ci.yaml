@@ -55,7 +55,7 @@ jobs:
       - name: Execute assemble
         run: |
           echo "$MY_JSON_SECRET" > key.json
-          ./gradlew assembleDebug --info
+          ./gradlew assembleDebug
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
