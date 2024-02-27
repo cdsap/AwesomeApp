@@ -120,7 +120,7 @@ jobs:
     strategy:
       matrix:
         java: [17]
-    needs: [ assemble, lint, testDebug]    
+    needs: [ assemble, lint, testDebug]
 
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -137,6 +137,7 @@ jobs:
 
       - name: Execute assemble
         run: |
+          git pull origin main
           bash replacer
           git config user.email inaki.seri@gmail.com
           git config user.name "inaki"
