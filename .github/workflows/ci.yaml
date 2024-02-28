@@ -163,6 +163,7 @@ jobs:
       - name: Execute assemble
         run: |
           echo "$MY_JSON_SECRET" > key.json
+          git pull origin main 
           ./gradlew assembleDebug
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -189,6 +190,7 @@ jobs:
         run: |
 
           echo "$MY_JSON_SECRET" > key.json
+          git pull origin main 
           ./gradlew lintRelease
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -215,6 +217,7 @@ jobs:
       - name: Execute testDebug
         run: |
           echo "$MY_JSON_SECRET" > key.json
+          git pull origin main 
           ./gradlew testDebug
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -297,6 +300,7 @@ jobs:
         run: |
 
           echo "$MY_JSON_SECRET" > key.json
+          git pull origin main 
           ./gradlew lintRelease
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -323,6 +327,7 @@ jobs:
       - name: Execute testDebug
         run: |
           echo "$MY_JSON_SECRET" > key.json
+          git pull origin main 
           ./gradlew testDebug
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -379,6 +384,7 @@ jobs:
       - name: Execute assemble
         run: |
           echo "$MY_JSON_SECRET" > key.json
+          git pull origin main 
           ./gradlew assembleDebug
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -405,6 +411,7 @@ jobs:
         run: |
 
           echo "$MY_JSON_SECRET" > key.json
+          git pull origin main 
           ./gradlew lintRelease
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -431,6 +438,7 @@ jobs:
       - name: Execute testDebug
         run: |
           echo "$MY_JSON_SECRET" > key.json
+          git pull origin main 
           ./gradlew testDebug
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
