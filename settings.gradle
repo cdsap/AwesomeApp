@@ -7,7 +7,18 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id("com.gradle.enterprise") version "3.16"
+}
 
+gradleEnterprise {
+    server = "http://ge.solutions-team.gradle.com"
+    allowUntrustedServer = true
+    buildScan {
+        publishAlways()
+        uploadInBackground = false
+    }
+}
 rootProject.name="awesomeapp"
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
