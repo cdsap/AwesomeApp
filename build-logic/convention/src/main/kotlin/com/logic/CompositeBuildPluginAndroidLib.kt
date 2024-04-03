@@ -20,7 +20,7 @@
                      extensions.configure<com.android.build.gradle.LibraryExtension>  {
                         namespace = "com.example.mylibrary.${name.replace("-","")}"
                         compileSdk = 33
-
+                         buildToolsVersion = "33.0.2"
                         defaultConfig {
                             minSdk = 24
                             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

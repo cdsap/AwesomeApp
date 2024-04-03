@@ -20,7 +20,7 @@ class CompositeBuildPluginAndroidApp : Plugin<Project> {
         extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
             namespace = "com.example.myapplication"
             compileSdk = 33
-
+            buildToolsVersion = "33.0.2"
             defaultConfig {
                 applicationId = "com.example.myapplication"
                 minSdk = 24
