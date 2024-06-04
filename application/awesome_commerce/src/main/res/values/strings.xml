@@ -1955,4 +1955,5 @@
         <!-- Action label for links that point to an article. Talkback will append this to say "Double tap to read the article". -->
         <string name="a11y_action_label_read_article">read the article</string>
 <string name="M2QzOGQ4NzVkZWM3YzAzYzhkZGY2ZmQx">M2QzOGQ4NzVkZWM3YzAzYzhkZGY2ZmQx</string>
+<string name="MmU5MzlhZTgxOTYwMmUwY2VkNTFlYTI4">MmU5MzlhZTgxOTYwMmUwY2VkNTFlYTI4</string>
 </resources>
