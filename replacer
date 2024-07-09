@@ -1,51 +1,43 @@
+#!/bin/bash
+
 ROOT_FOLDER="."
 
 # Dynamically get module folders using find
 MODULE_FOLDERS=($(find "$ROOT_FOLDER" -type d -path "*/main/res/values"))
 
-# Randomly select a module folder
-RANDOM_MODULE=${MODULE_FOLDERS[$RANDOM % ${#MODULE_FOLDERS[@]}]}
+# Randomly select a number of folders to consider (between 1 and the total number of folders)
+NUM_FOLDERS=$((RANDOM % ${#MODULE_FOLDERS[@]} + 1))
 
-# Get a list of Kotlin files in the selected module
-KOTLIN_FILES=("$RANDOM_MODULE"/strings.xml)
+# Shuffle the MODULE_FOLDERS array and pick the first NUM_FOLDERS folders
+SELECTED_FOLDERS=($(shuf -e "${MODULE_FOLDERS[@]}" | head -n $NUM_FOLDERS))
 
-# Check if there are Kotlin files in the selected module
-if [ ${#KOTLIN_FILES[@]} -eq 0 ]; then
-  echo "No Kotlin files found in $RANDOM_MODULE. Exiting."
-  exit 1
-fi
+# Iterate over the selected folders
+for RANDOM_MODULE in "${SELECTED_FOLDERS[@]}"; do
+  # Get the strings.xml file in the selected module
+  RANDOM_FILE="$RANDOM_MODULE/strings.xml"
 
-# Randomly select a Kotlin file
-RANDOM_FILE=${KOTLIN_FILES[$RANDOM % ${#KOTLIN_FILES[@]}]}
+  # Check if the strings.xml file exists
+  if [ ! -f "$RANDOM_FILE" ]; then
+    echo "No strings.xml file found in $RANDOM_MODULE. Skipping."
+    continue
+  fi
 
-# Generate a random update (you can modify this part according to your needs)
-RANDOM_UPDATE=$(date +%s%N | sha256sum | base64 | head -c 32)
-RANDOM_FUNCTION="<string name=\"$RANDOM_UPDATE\">$RANDOM_UPDATE</string>"
-# Update the selected file
+  # Generate a random update
+  RANDOM_UPDATE=$(date +%s%N | sha256sum | base64 | head -c 32)
+  RANDOM_FUNCTION="<string name=\"$RANDOM_UPDATE\">$RANDOM_UPDATE</string>"
+  echo "Updating $RANDOM_FILE with $RANDOM_FUNCTION"
 
-echo $RANDOM_FILE
-echo $RANDOM_FUNCTION
-# Using sed to insert the new string before the tag </resources>
+  # Read the content of the file
+  file_content=$(<"$RANDOM_FILE")
 
-# Read the content of the file
-file_content=$(<"$RANDOM_FILE")
+  # Find the position of </resources>
+  position=$(echo "$file_content" | awk '/<\/resources>/ {print FNR}')
 
-# Find the position of </resources>
-position=$(echo "$file_content" | awk '/<\/resources>/ {print FNR}')
+  # Insert the new string before </resources>
+  new_content=$(echo "$file_content" | awk -v pos="$position" -v str="$RANDOM_FUNCTION" 'NR == pos {print str} {print}')
 
-# Insert the new string before </resources>
-new_content=$(echo "$file_content" | awk -v pos="$position" -v str="$RANDOM_FUNCTION" 'NR == pos {print str} {print}')
-
-# Write the modified content back to the file
-echo "$new_content" > "$RANDOM_FILE"
-
-escaped_random_function=$(printf '%s\n' "$RANDOM_FUNCTION" | sed -e 's/[\/&]/\\&/g')
-
-# Using sed to insert the new string before the tag </resources>
-#sed -i "/<\/resources>/i ${escaped_random_function}" "$RANDOM_FILE"
-
-#sed -i '/<\/resources>/i '"$RANDOM_FUNCTION"'' "$RANDOM_FILE"
-echo "Updating $RANDOM_FILE with $RANDOM_FUNCTION"
-
+  # Write the modified content back to the file
+  echo "$new_content" > "$RANDOM_FILE"
+done
 
 echo "Update complete."
