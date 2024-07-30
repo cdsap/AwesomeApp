@@ -2,7 +2,7 @@ name: Build CI
 
 on:
   schedule:
-      - cron: '0 */2 * * *'
+      - cron: '0 */3 * * *'
 
 concurrency:
   group: build-${{ github.ref }}
@@ -54,9 +54,10 @@ jobs:
 
       - name: Execute assemble
         run: |
-          git log -1
-          ./gradlew assembleDebug --info
+          echo "$MY_JSON_SECRET" > key.json
+          ./gradlew assembleDebug
         env:
+            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
             INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
@@ -78,8 +79,11 @@ jobs:
 
       - name: Execute lintRelease
         run: |
+
+          echo "$MY_JSON_SECRET" > key.json
           ./gradlew lintRelease
         env:
+            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
             INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
@@ -102,8 +106,10 @@ jobs:
 
       - name: Execute testDebug
         run: |
+          echo "$MY_JSON_SECRET" > key.json
           ./gradlew testDebug
         env:
+            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
             INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
             INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
