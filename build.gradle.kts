@@ -160,6 +160,10 @@ class PublisherModulesWithProcesses : Publisher {
             val processUsage = report.environment.processesStats.listGradleProcesses.first().usage
             rowContent["processUsageGradle"] = processUsage!!
 
+            val capacity = report.environment.processesStats.listGradleProcesses.first().capacity
+            rowContent["cpacityGradle"] = capacity!!
+
+
             val kotlinProcesses = report.environment.processesStats.listKotlinProcesses.count()
             rowContent["kotlinProcesses"] = kotlinProcesses
 
@@ -175,7 +179,10 @@ class PublisherModulesWithProcesses : Publisher {
                 val processUsageKotlin =
                     report.environment.processesStats.listKotlinProcesses.sortedBy { it.uptime }
                         .first().usage
-                rowContent["processUsageKotlin"] = processUsageKotlin!!
+                val capacityKotlin =
+                    report.environment.processesStats.listKotlinProcesses.sortedBy { it.uptime }
+                        .first().capacity
+                rowContent["capacityKotlin"] = capacityKotlin!!
 
             }
             val buildName = report.requestedTasks
