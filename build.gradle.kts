@@ -161,7 +161,7 @@ class PublisherModulesWithProcesses : Publisher {
             rowContent["processUsageGradle"] = processUsage!!
 
             val capacity = report.environment.processesStats.listGradleProcesses.first().capacity
-            rowContent["cpacityGradle"] = capacity!!
+            rowContent["capacityGradle"] = capacity!!
 
 
             val kotlinProcesses = report.environment.processesStats.listKotlinProcesses.count()
@@ -170,6 +170,7 @@ class PublisherModulesWithProcesses : Publisher {
             if (kotlinProcesses == 0) {
                 rowContent["processGTimeKotlin"] = -1
                 rowContent["processUsageKotlin"] = -1
+                rowContent["capacityKotlin"] = -1
             } else {
 
                 val processGCTimeKotlin =
