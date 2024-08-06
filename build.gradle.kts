@@ -180,9 +180,11 @@ class PublisherModulesWithProcesses : Publisher {
                 val processUsageKotlin =
                     report.environment.processesStats.listKotlinProcesses.sortedBy { it.uptime }
                         .first().usage
+                 rowContent["processUsageKotlin"] = processUsageKotlin!! 
                 val capacityKotlin =
                     report.environment.processesStats.listKotlinProcesses.sortedBy { it.uptime }
                         .first().capacity
+   
                 rowContent["capacityKotlin"] = capacityKotlin!!
 
             }
