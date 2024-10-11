@@ -45,6 +45,13 @@ jobs:
         run: |
             echo "Cache not found, generating file..."
             ./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=my_cached_file.txt
+        env:
+            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
+            INFLUX_URL: ${{ secrets.INFLUX_URL }}
+            INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
+            CACHE_URL: ${{ secrets.CACHE_URL }}
+            CI: true
       - name: Cache the Generated File
         if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/cache@v3
