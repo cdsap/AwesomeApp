@@ -18,6 +18,7 @@ plugins {
     id("com.android.application") version "8.1.4" apply false
     id("com.android.library") version "8.1.4" apply false
     id("io.github.cdsap.talaiot") version "2.0.4"
+    id("com.jraska.module.graph.assertion") version "2.7.1"
 }
 
 
