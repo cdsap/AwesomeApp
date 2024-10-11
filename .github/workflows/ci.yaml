@@ -90,6 +90,12 @@ jobs:
           git commit -m "change $RANDOM"
           git push origin test_12
 
+          bash replacer
+
+          git add .
+          git commit -m "change $RANDOM"
+          git push origin test_12
+
   files_that_going_to_be_updated:
       runs-on: "ubuntu-latest"
       needs: [ newcommit]
