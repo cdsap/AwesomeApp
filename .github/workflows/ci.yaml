@@ -45,6 +45,7 @@ jobs:
         run: |
             echo "Cache not found, generating file..."
             ./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=my_cached_file.txt
+            cat  my_cached_file.txt
         env:
             MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
             INFLUX_URL: ${{ secrets.INFLUX_URL }}
