@@ -109,6 +109,7 @@ jobs:
                 key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
           - name: Execute assemble
             run: |
+                 cat my_cached_file.txt
                  ./modulesbychange --dot-file  my_cached_file.txt
                  cat potential_tasks_executed.txt
 
