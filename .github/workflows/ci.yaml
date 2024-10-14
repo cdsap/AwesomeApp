@@ -24,7 +24,16 @@ jobs:
               with:
                   distribution: 'temurin'
                   java-version: 17
+            - id: 'auth'
+              uses: 'google-github-actions/auth@v2'
+              with:
+                 credentials_json: '${{ secrets.MY_JSON_SECRET }}'
 
+            - name: 'Set up Cloud SDK'
+              uses: 'google-github-actions/setup-gcloud@v2'
+
+            - name: 'Use gcloud CLI'
+              run: 'gcloud info'
 
 
             - name: Set up Google Cloud Credentials
