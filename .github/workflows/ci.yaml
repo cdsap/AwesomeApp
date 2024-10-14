@@ -139,7 +139,7 @@ jobs:
                   -d @key.json \
                   https://oauth2.googleapis.com/token | jq -r '.access_token')
                   curl -X POST \
-                  -H "Authorization: Bearer ${{ ACCESS_TOKEN }}" \
+                  -H "Authorization: Bearer $ACCESS_TOKEN" \
                   -H "Content-Type: application/json" \
                   -d '{
                       "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.model_builds_7`,( SELECT 3403 as tasksExecuted));",
