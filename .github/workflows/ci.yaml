@@ -10,94 +10,8 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    generate_cache_key:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                java: [17]
-        timeout-minutes: 60
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Generate Cache Key
-              id: generate_cache_key
-              run: |
-                  all_contents=""
-                  while IFS= read -r -d '' file; do
-                    all_contents+=$(cat "$file")
-                  done < <(find . -name "build.gradle.kts" -print0)
-                  cache_key=$(echo -n "$all_contents" | sha256sum | awk '{print $1}')
-                  echo "Cache Key: $cache_key"
-                  echo "::set-output name=cache_key::$cache_key"
-
-            - name: Check for Cached File
-              id: cache
-              uses: actions/cache@v3
-              with:
-                  path: project_graph.dot
-                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
-              continue-on-error: true
-
-            - name: Set up JDK ${{ matrix.java }}
-              uses: actions/setup-java@v3
-              with:
-                  distribution: 'temurin'
-                  java-version: ${{ matrix.java }}
-
-            - name: Generate File if Cache is Not Found
-              if: steps.cache.outputs.cache-hit != 'true'
-              run: |
-                  echo "Cache not found, generating file..."
-                  ./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=project_graph.dot
-              env:
-                  MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
-                  INFLUX_URL: ${{ secrets.INFLUX_URL }}
-                  INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
-                  INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
-                  CACHE_URL: ${{ secrets.CACHE_URL }}
-                  CI: true
-
-            - name: Cache the Generated File
-              if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions/cache@v3
-              with:
-                  path: project_graph.dot
-                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
-
-    newcommit:
-        needs: generate_cache_key
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                java: [17]
-        timeout-minutes: 60
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Set up JDK ${{ matrix.java }}
-              uses: actions/setup-java@v3
-              with:
-                  distribution: 'temurin'
-                  java-version: ${{ matrix.java }}
-
-            - name: Push Changes
-              run: |
-                  #bash replacer
-                  #git config user.email inaki.seri@gmail.com
-                  #git config user.name "inaki"
-                  #git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/cdsap/AwesomeApp
-                  #git add .
-                  #git commit -m "change $RANDOM"
-                  #git push origin test_12
-                  #bash replacer
-                  #git add .
-                  #git commit -m "change $RANDOM"
-                  #git push origin test_12
 
     files_that_going_to_be_updated:
-        needs: newcommit
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -123,7 +37,6 @@ jobs:
                   git pull origin test_12
                   git log -n 2
                   ./modulesbychange --dot-file project_graph.dot
-                  export GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json
                   cat potential_tasks_executed.txt
               env:
                   MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -132,6 +45,7 @@ jobs:
             - name: Set up Google Cloud Credentials
               env:
                   GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+                  MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
               run: |
                   echo "$MY_JSON_SECRET" > key.json
                   export GOOGLE_APPLICATION_CREDENTIALS=key.json
@@ -145,5 +59,8 @@ jobs:
                       "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.model_builds_7`,( SELECT 3403 as tasksExecuted));",
                       "useLegacySql": false
                     }' \
-                  https://bigquery.googleapis.com/bigquery/v2/projects/ycache-node/queries
+                  https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries
+
+
+
 
