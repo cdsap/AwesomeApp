@@ -38,7 +38,7 @@ jobs:
               run: |
                   echo "2"
                   curl -X POST \
-                  -H "Authorization: Bearer $ACCESS_TOKEN" \
+                  -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
                   -H "Content-Type: application/json" \
                   -d '{
                       "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.model_builds_7`,( SELECT 3403 as tasksExecuted));",
