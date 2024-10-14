@@ -4,146 +4,146 @@ on:
     push:
         branches:
             - test_12
+
 concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: true
+    group: build-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-  generate_cache_key:
-    strategy:
-      matrix:
-       java: [17]
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Generate Cache Key
-        id: generate_cache_key
-        run: |
-            all_contents=""
-            while IFS= read -r -d '' file; do
-              all_contents+=$(cat "$file")
-            done < <(find . -name "build.gradle.kts" -print0)
-            cache_key=$(echo -n "$all_contents" | sha256sum | awk '{print $1}')
-            echo "Cache Key: $cache_key"
-            echo "::set-output name=cache_key::$cache_key"
-      - name: Check for Cached File
-        id: cache
-        uses: actions/cache@v3
-        with:
-            path: my_cached_file.txt  # Specify the file to be cached
-            key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
-        continue-on-error: true  # Continue even if the cache is not found
-      - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
-        with:
-            distribution: 'temurin'
-            java-version:  ${{ matrix.java }}
-      - name: Generate File if Cache is Not Found
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-            echo "Cache not found, generating file..."
-            ./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=my_cached_file.txt
-            cat  my_cached_file.txt
-        env:
-            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
-            INFLUX_URL: ${{ secrets.INFLUX_URL }}
-            INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
-            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
-            CACHE_URL: ${{ secrets.CACHE_URL }}
-            CI: true
-      - name: Cache the Generated File
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v3
-        with:
-            path: my_cached_file.txt
-            key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
+    generate_cache_key:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                java: [17]
+        timeout-minutes: 60
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
 
-  newcommit:
-    needs: [ generate_cache_key]
-    strategy:
-      matrix:
-        java: [17]
+            - name: Generate Cache Key
+              id: generate_cache_key
+              run: |
+                  all_contents=""
+                  while IFS= read -r -d '' file; do
+                    all_contents+=$(cat "$file")
+                  done < <(find . -name "build.gradle.kts" -print0)
+                  cache_key=$(echo -n "$all_contents" | sha256sum | awk '{print $1}')
+                  echo "Cache Key: $cache_key"
+                  echo "::set-output name=cache_key::$cache_key"
 
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+            - name: Check for Cached File
+              id: cache
+              uses: actions/cache@v3
+              with:
+                  path: project_graph.dot
+                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
+              continue-on-error: true
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+            - name: Set up JDK ${{ matrix.java }}
+              uses: actions/setup-java@v3
+              with:
+                  distribution: 'temurin'
+                  java-version: ${{ matrix.java }}
 
-      - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version:  ${{ matrix.java }}
+            - name: Generate File if Cache is Not Found
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: |
+                  echo "Cache not found, generating file..."
+                  ./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=project_graph.dot
+              env:
+                  MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
+                  INFLUX_URL: ${{ secrets.INFLUX_URL }}
+                  INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+                  INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
+                  CACHE_URL: ${{ secrets.CACHE_URL }}
+                  CI: true
 
-      - name: Execute assemble
-        run: |
-          bash replacer
-          git config user.email inaki.seri@gmail.com
-          git config user.name "inaki"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/cdsap/AwesomeApp
+            - name: Cache the Generated File
+              if: steps.cache.outputs.cache-hit != 'true'
+              uses: actions/cache@v3
+              with:
+                  path: project_graph.dot
+                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
 
-          git add .
-          git commit -m "change $RANDOM"
-          git push origin test_12
+    newcommit:
+        needs: generate_cache_key
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                java: [17]
+        timeout-minutes: 60
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
 
-          bash replacer
+            - name: Set up JDK ${{ matrix.java }}
+              uses: actions/setup-java@v3
+              with:
+                  distribution: 'temurin'
+                  java-version: ${{ matrix.java }}
 
-          git add .
-          git commit -m "change $RANDOM"
-          git push origin test_12
+            - name: Push Changes
+              run: |
+                  #bash replacer
+                  #git config user.email inaki.seri@gmail.com
+                  #git config user.name "inaki"
+                  #git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/cdsap/AwesomeApp
+                  #git add .
+                  #git commit -m "change $RANDOM"
+                  #git push origin test_12
+                  #bash replacer
+                  #git add .
+                  #git commit -m "change $RANDOM"
+                  #git push origin test_12
 
-  files_that_going_to_be_updated:
-      runs-on: "ubuntu-latest"
-      needs: [ newcommit]
-      steps:
-          - name: Checkout
-            uses: actions/checkout@v3
-            with:
-              fetch-depth: 2
-          - name: Set up JDK 17
-            uses: actions/setup-java@v3
-            with:
-                distribution: 'temurin'
-                java-version:  17
-          - name: Check for Cached File
-            id: cache
-            uses: actions/cache@v3
-            with:
-                path: my_cached_file.txt  # Specify the file to be cached
-                key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
-          - name: Execute assemble
-            run: |
-                 git pull origin test_12
-                 git log -n 2
-                 ./modulesbychange --dot-file  my_cached_file.txt
-                 cat potential_tasks_executed.txt
+    files_that_going_to_be_updated:
+        needs: newcommit
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 2
 
-  assemble:
-    runs-on: "ubuntu-latest"
-    needs: [ files_that_going_to_be_updated]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+            - name: Set up JDK 17
+              uses: actions/setup-java@v3
+              with:
+                  distribution: 'temurin'
+                  java-version: 17
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version:  17
+            - name: Check for Cached File
+              id: cache
+              uses: actions/cache@v3
+              with:
+                  path: project_graph.dot
+                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
 
-      - name: Execute assemble
-        run: |
-          echo "$MY_JSON_SECRET" > key.json
-          ./gradlew assembleDebug
-        env:
-            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
-            INFLUX_URL: ${{ secrets.INFLUX_URL }}
-            INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
-            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
-            CACHE_URL: ${{ secrets.CACHE_URL }}
-            CI: true
+            - name: Execute Assemble
+              run: |
+                  git pull origin test_12
+                  git log -n 2
+                  ./modulesbychange --dot-file project_graph.dot
+                  export GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json
+                  cat potential_tasks_executed.txt
+              env:
+                  MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
+
+
+            - name: Set up Google Cloud Credentials
+              env:
+                  GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+              run: |
+                  echo "$MY_JSON_SECRET" > key.json
+                  export GOOGLE_APPLICATION_CREDENTIALS=key.json
+                  ACCESS_TOKEN=$(curl -s -X POST -H "Content-Type: application/json" \
+                  -d @key.json \
+                  https://oauth2.googleapis.com/token | jq -r '.access_token')
+                  curl -X POST \
+                  -H "Authorization: Bearer ${{ ACCESS_TOKEN }}" \
+                  -H "Content-Type: application/json" \
+                  -d '{
+                      "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.model_builds_7`,( SELECT 3403 as tasksExecuted));",
+                      "useLegacySql": false
+                    }' \
+                  https://bigquery.googleapis.com/bigquery/v2/projects/ycache-node/queries
 
