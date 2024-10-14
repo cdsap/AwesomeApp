@@ -37,7 +37,7 @@ jobs:
                   ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
                   LA: "dd"
               run: |
-                  echo ${{ env.dd }}
+                  echo ${{ env.LA }}
                   echo "2"
                   curl -X POST \
                   -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
