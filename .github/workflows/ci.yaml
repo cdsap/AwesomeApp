@@ -31,10 +31,13 @@ jobs:
               env:
                   GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
                   MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
+                  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
               run: |
                   echo "$MY_JSON_SECRET" > key.json
                   export GOOGLE_APPLICATION_CREDENTIALS=key.json
                   echo "1"
+                  curl -X POST -H "Authorization: Bearer ${{ env.PRIVATE_KEY}}"  -H "Content-Type: application/json" -d '{  "query":"SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.model_builds_7`,( SELECT 3403 as tasksExecuted));",  "useLegacySql": false }'  https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries
+                  echo "1.0.1"
                   curl -X POST -H "Content-Type: application/json" -d @key.json https://oauth2.googleapis.com/token
                   echo "1.1"
                   ACCESS_TOKEN=$(curl -s -X POST -H "Content-Type: application/json" \
