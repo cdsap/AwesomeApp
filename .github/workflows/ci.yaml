@@ -37,6 +37,7 @@ jobs:
                   ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
                   LA: "dd"
               run: |
+                  gcloud info
                   echo ${{ env.LA }}
                   echo "2"
                   curl -X POST \
