@@ -24,98 +24,9 @@ plugins {
 
 talaiot {
     publishers {
-        customPublishers(PublisherModulesWithProcesses(), PublisherModuleMetrics())
+        customPublishers(PublisherModulesWithProcesses())
     }
 }
-
-data class ModuleDuration(
-    val module: String,
-    val executed: Boolean,
-    val duration: Long,
-    val durationModule: Long,
-    val modulesExecuted: Int
-)
-
-class PublisherModuleMetrics : Publisher {
-    override fun publish(report: ExecutionReport) {
-        val duration = report.durationMs
-        val filePath = "./key.json"
-        if (File(filePath).exists()) {
-            val db = "mobile_build_metrics"
-            val tableName = "builds5"
-            var modulesUpdated = 0
-            report.tasks?.groupBy { it.module }?.forEach {
-                if (it.value.any { it.state == io.github.cdsap.talaiot.entities.TaskMessageState.EXECUTED }) {
-                    modulesUpdated++
-                }
-            }
-
-            val metricsByModule = metricsByModule(report, duration, modulesUpdated)
-            val rows = mapRow(metricsByModule)
-            val table =
-                com.google.cloud.bigquery.TableId.of(db, tableName)
-            val client = com.google.cloud.bigquery.BigQueryOptions.newBuilder()
-                .setCredentials(
-                    com.google.auth.oauth2.GoogleCredentials.fromStream(
-                        java.io.FileInputStream(
-                            filePath
-                        )
-                    )
-                )
-                .build()
-                .service
-            try {
-                val insertRequestBuilder = InsertAllRequest.newBuilder(table)
-                for (row in rows) {
-                    insertRequestBuilder.addRow(row)
-                }
-                val response = client.insertAll(insertRequestBuilder.build())
-                if (response.hasErrors()) {
-                    response.insertErrors.forEach { (t, u) -> println("Response error for key: $t, value: $u") }
-                } else {
-                    println("PublisherModuleMetrics information published to BigQuery")
-                }
-
-            } catch (e: com.google.cloud.bigquery.BigQueryException) {
-                println("Insert operation not performed $e")
-            }
-        } else {
-            println("Credentials $filePath not found")
-        }
-    }
-
-    private fun metricsByModule(report: ExecutionReport, duration: String?, modulesUpdated: Int):
-        List<ModuleDuration> {
-        val metricsByModule = mutableListOf<ModuleDuration>()
-        report.tasks!!.groupBy { it.module }.forEach {
-            metricsByModule.add(
-                ModuleDuration(
-                    it.key,
-                    it.value.any { it.state == TaskMessageState.EXECUTED },
-                    duration?.toLong()!!,
-                    it.value.sumOf { it.ms },
-                    modulesUpdated
-                )
-            )
-        }
-        return metricsByModule
-    }
-
-    private fun mapRow(durations: List<ModuleDuration>): List<Map<String, Any>> {
-        val rows = mutableListOf<Map<String, Any>>()
-        durations.forEach {
-            val rowContent = mutableMapOf<String, Any>()
-            rowContent["module"] = it.module
-            rowContent["duration"] = it.duration
-            rowContent["executed"] = it.executed
-            rowContent["durationModule"] = it.durationModule
-            rowContent["modulesExecuted"] = it.modulesExecuted
-            rows.add(rowContent)
-        }
-        return rows
-    }
-}
-
 
 class PublisherModulesWithProcesses : Publisher {
     override fun publish(report: ExecutionReport) {
@@ -160,6 +71,8 @@ class PublisherModulesWithProcesses : Publisher {
             rowContent["processGCTimeGradle"] = processGCTime!!
             val processUsage = report.environment.processesStats.listGradleProcesses.first().usage
             rowContent["processUsageGradle"] = processUsage!!
+            val capacityGradle = report.environment.processesStats.listGradleProcesses.first().capacity
+            rowContent["capacityGradle"] = capacityGradle!!
 
             val kotlinProcesses = report.environment.processesStats.listKotlinProcesses.count()
             rowContent["kotlinProcesses"] = kotlinProcesses
@@ -167,6 +80,7 @@ class PublisherModulesWithProcesses : Publisher {
             if (kotlinProcesses == 0) {
                 rowContent["processGTimeKotlin"] = -1
                 rowContent["processUsageKotlin"] = -1
+                rowContent["capacityKotlin"] = -1
             } else {
 
                 val processGCTimeKotlin =
@@ -177,6 +91,10 @@ class PublisherModulesWithProcesses : Publisher {
                     report.environment.processesStats.listKotlinProcesses.sortedBy { it.uptime }
                         .first().usage
                 rowContent["processUsageKotlin"] = processUsageKotlin!!
+                val capacityKotlin =
+                    report.environment.processesStats.listKotlinProcesses.sortedBy { it.uptime }
+                        .first().capacity
+                rowContent["capacityKotlin"] = capacityKotlin!!
 
             }
             val buildName = report.requestedTasks

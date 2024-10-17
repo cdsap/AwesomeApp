@@ -124,6 +124,7 @@ jobs:
                   git pull origin test_12
                   git log -n 2
                   ./modulesbychange --dot-file project_graph.dot
+                  cat potential_tasks_executed.txt
                   echo "tasks=$(<potential_tasks_executed.txt)" >> $GITHUB_ENV
                   echo "::set-output name=tasks::$(<potential_tasks_executed.txt)"
     gcloud_query:
@@ -152,6 +153,8 @@ jobs:
                 env:
                     ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
                 run: |
+                    echo "1"
+                    echo ${{ needs.files_that_going_to_be_updated.outputs.tasks }}
                     curl -X POST \
                     -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
                     -H "Content-Type: application/json" \
