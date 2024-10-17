@@ -154,7 +154,7 @@ jobs:
                     ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
                 run: |
                     echo "1"
-                    echo ${{ needs.files_that_going_to_be_updated.outputs.tasks }}
+                    echo "${{ needs.files_that_going_to_be_updated.outputs.tasks }}"
                     curl -X POST \
                     -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
                     -H "Content-Type: application/json" \
@@ -163,6 +163,7 @@ jobs:
                         "useLegacySql": false
                       }' \
                     https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
+                    cat value_predicted
                     echo "::set-output name=prediction::$(<value_predicted)"
 
     assemble:
