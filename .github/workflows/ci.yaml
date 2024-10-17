@@ -100,6 +100,8 @@ jobs:
     files_that_going_to_be_updated:
         needs: newcommit
         runs-on: ubuntu-latest
+        outputs:
+          tasks: ${{ steps.assemble_step.outputs.tasks }}
         steps:
             - name: Checkout
               uses: actions/checkout@v3
