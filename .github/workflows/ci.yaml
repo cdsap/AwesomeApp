@@ -101,7 +101,7 @@ jobs:
         needs: newcommit
         runs-on: ubuntu-latest
         outputs:
-          tasks: ${{ steps.assemble_step.outputs.tasks }}
+          tasks: ${{ steps.calculate.outputs.tasks }}
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -122,12 +122,14 @@ jobs:
                   key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
 
             - name: Execute Assemble
+              id: calculate
               run: |
                   git pull origin test_12
                   git log -n 2
                   ./modulesbychange --dot-file project_graph.dot
                   cat potential_tasks_executed.txt
                   echo "tasks=$(<potential_tasks_executed.txt)" >> $GITHUB_ENV
+                  echo "tasks=$(<potential_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
                   echo "::set-output name=tasks::$(<potential_tasks_executed.txt)"
     gcloud_query:
         needs: files_that_going_to_be_updated
