@@ -154,8 +154,10 @@ jobs:
             -   name: 'Use gcloud CLI'
                 env:
                     ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
+                    TASKS: ${{ needs.files_that_going_to_be_updated.outputs.tasks }}
                 run: |
                     echo "1"
+                    echo $TASKS
                     echo "${{ needs.files_that_going_to_be_updated.outputs.tasks }}"
                     curl -X POST \
                     -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
