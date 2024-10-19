@@ -165,7 +165,7 @@ jobs:
                     -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
                     -H "Content-Type: application/json" \
                     -d '{
-                        "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.model_builds_7`,( SELECT ${{ needs.files_that_going_to_be_updated.outputs.tasks }} as tasksExecuted));",
+                        "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.predictions_capacityGradle`,( SELECT ${{ needs.files_that_going_to_be_updated.outputs.tasks }} as tasksExecuted));",
                         "useLegacySql": false
                       }' \
                     https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
