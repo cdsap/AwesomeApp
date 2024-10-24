@@ -133,6 +133,8 @@ jobs:
                   echo "::set-output name=tasks::$(<potential_tasks_executed.txt)"
     gcloud_query:
         needs: files_that_going_to_be_updated
+        outputs:
+            tasks: ${{ steps.calculate.outputs.tasks }}
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -170,6 +172,7 @@ jobs:
                       }' \
                     https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
                     cat value_predicted
+                    echo "tasks=$(<value_predicted)" >> "$GITHUB_OUTPUT"
                     echo "::set-output name=prediction::$(<value_predicted)"
 
     assemble:
@@ -188,8 +191,8 @@ jobs:
             - name: Execute assemble
               run: |
                   echo "$MY_JSON_SECRET" > key.json
-                  echo "the prediction is: ${{ needs.gcloud_query.outputs.prediction }}"
-                  echo '### ${{ needs.gcloud_query.outputs.prediction }} 🚀' >> $GITHUB_STEP_SUMMARY
+                  echo "the prediction is: ${{ needs.gcloud_query.outputs.task }}"
+                  echo '### ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
               env:
                   MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
