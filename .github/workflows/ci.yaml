@@ -189,6 +189,7 @@ jobs:
               run: |
                   echo "$MY_JSON_SECRET" > key.json
                   echo "the prediction is: ${{ needs.gcloud_query.outputs.prediction }}"
+                  echo '### ${{ needs.gcloud_query.outputs.prediction }} 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
               env:
                   MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
