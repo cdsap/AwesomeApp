@@ -171,7 +171,6 @@ jobs:
                     https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
                     cat value_predicted
                     echo "task=$(<value_predicted)" >> "$GITHUB_OUTPUT"
-                    echo "::set-output name=prediction::$(<value_predicted)"
 
     assemble:
         needs: gcloud_query
@@ -189,8 +188,8 @@ jobs:
             - name: Execute assemble
               run: |
                   echo "$MY_JSON_SECRET" > key.json
-                  echo "the prediction is: ${{ env.PREDICTION }}"
-                  echo '### ${{ env.PREDICTION }} 🚀' >> $GITHUB_STEP_SUMMARY
+                  echo "the prediction is: $PREDICTION"
+                  echo '### $PREDICTION 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
               env:
                   PREDICTION: ${{ needs.gcloud_query.outputs.task }}
