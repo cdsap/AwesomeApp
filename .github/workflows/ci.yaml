@@ -192,6 +192,8 @@ jobs:
 
             - name: Execute assemble
               run: |
+                  echo "PREDICTION output: ${{ needs.gcloud_query.outputs.task }}"
+                  echo "PREDICTION2 output: ${{ needs.gcloud_query.outputs.task2 }}"
                   echo "$MY_JSON_SECRET" > key.json
                   echo "the prediction is: $PREDICTION"
                   echo "the prediction2 is: $PREDICTION2"
