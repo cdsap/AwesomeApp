@@ -189,16 +189,7 @@ jobs:
               with:
                   distribution: 'temurin'
                   java-version:  17
-
             - name: Execute assemble
-              run: |
-                  echo "PREDICTION output: ${{ needs.gcloud_query.outputs.task }}"
-                  echo "PREDICTION2 output: ${{ needs.gcloud_query.outputs.task2 }}"
-                  echo "$MY_JSON_SECRET" > key.json
-                  echo "the prediction is: $PREDICTION"
-                  echo "the prediction2 is: $PREDICTION2"
-                  echo '### $PREDICTION 🚀' >> $GITHUB_STEP_SUMMARY
-                  ./gradlew assembleDebug
               env:
                   PREDICTION: ${{ needs.gcloud_query.outputs.task }}
                   PREDICTION2: ${{ needs.gcloud_query.outputs.task2 }}
@@ -208,3 +199,11 @@ jobs:
                   INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
                   CACHE_URL: ${{ secrets.CACHE_URL }}
                   CI: true
+              run: |
+                  echo "PREDICTION output: ${{ needs.gcloud_query.outputs.task }}"
+                  echo "PREDICTION2 output: ${{ needs.gcloud_query.outputs.task2 }}"
+                  echo "$MY_JSON_SECRET" > key.json
+                  echo "the prediction is: $PREDICTION"
+                  echo "the prediction2 is: $PREDICTION2"
+                  echo '### $PREDICTION 🚀' >> $GITHUB_STEP_SUMMARY
+                  ./gradlew assembleDebug
