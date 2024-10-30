@@ -133,6 +133,7 @@ jobs:
         needs: files_that_going_to_be_updated
         outputs:
             task: ${{ steps.calculate.outputs.tasks }}
+            task2: ${{ steps.calculate.outputs.tasks }}
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -171,6 +172,7 @@ jobs:
                     https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
                     cat value_predicted
                     echo "task=$(<value_predicted)" >> "$GITHUB_OUTPUT"
+                    echo "task2=assasa" >> "$GITHUB_OUTPUT"
 
     assemble:
         needs: gcloud_query
@@ -189,10 +191,12 @@ jobs:
               run: |
                   echo "$MY_JSON_SECRET" > key.json
                   echo "the prediction is: $PREDICTION"
+                  echo "the prediction2 is: $PREDICTION2"
                   echo '### $PREDICTION 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
               env:
                   PREDICTION: ${{ needs.gcloud_query.outputs.task }}
+                  PREDICTION2: ${{ needs.gcloud_query.outputs.task2 }}
                   MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
                   INFLUX_URL: ${{ secrets.INFLUX_URL }}
                   INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
