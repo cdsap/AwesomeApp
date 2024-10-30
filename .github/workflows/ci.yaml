@@ -176,6 +176,9 @@ jobs:
 
     assemble:
         needs: gcloud_query
+        outputs:
+            task: ${{ steps.calculate.outputs.tasks }}
+            task2: ${{ steps.calculate.outputs.tasks }}
         runs-on: "ubuntu-latest"
         steps:
             - name: Checkout
