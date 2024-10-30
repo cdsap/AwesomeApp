@@ -189,8 +189,8 @@ jobs:
             - name: Execute assemble
               run: |
                   echo "$MY_JSON_SECRET" > key.json
-                  echo "the prediction is: ${{ needs.gcloud_query.outputs.task }}"
-                  echo '### $PREDICTION 🚀' >> $GITHUB_STEP_SUMMARY
+                  echo "the prediction is: ${{ env.PREDICTION }}"
+                  echo '### ${{ env.PREDICTION }} 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
               env:
                   PREDICTION: ${{ needs.gcloud_query.outputs.task }}
