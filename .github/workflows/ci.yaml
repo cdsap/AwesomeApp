@@ -208,5 +208,5 @@ jobs:
                   echo "the prediction2 is: $PREDICTION2"
                   echo '### Prediction ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
-                  cat capacityGradle
-                  echo '### Real Value $(<capacityGradle) 🚀' >> $GITHUB_STEP_SUMMARY
+                  value=$(cat capacityGradle)
+                  echo '### Real Value \$value - $value 🚀' >> $GITHUB_STEP_SUMMARY
