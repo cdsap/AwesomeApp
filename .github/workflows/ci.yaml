@@ -49,7 +49,7 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               run: |
                   echo "Cache not found, generating file..."
-                  ./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=project_graph.dot
+                  #./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=project_graph.dot
                   cat project_graph.dot
               env:
                   MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
@@ -141,6 +141,7 @@ jobs:
                 uses: 'google-github-actions/setup-gcloud@v2'
 
             -   name: 'Use gcloud CLI'
+                id: gcloud_query
                 env:
                     ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
                     TASKS: ${{ needs.files_that_going_to_be_updated.outputs.tasks }}
@@ -156,8 +157,8 @@ jobs:
     assemble:
         needs: gcloud_query
         outputs:
-            task: ${{ steps.calculate.outputs.tasks }}
-            task2: ${{ steps.calculate.outputs.tasks }}
+            task: ${{ steps.gcloud_query.outputs.tasks }}
+            task2: ${{ steps.gcloud_query.outputs.tasks }}
         runs-on: "ubuntu-latest"
         steps:
             - name: Checkout
