@@ -118,8 +118,8 @@ jobs:
     gcloud_query:
         needs: files_that_going_to_be_updated
         outputs:
-            task: ${{ steps.calculate.outputs.tasks }}
-            task2: ${{ steps.calculate.outputs.tasks }}
+            task: ${{ steps.gcloud_query.outputs.task}}
+            task2: ${{ steps.gcloud_query.outputs.task2 }}
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
