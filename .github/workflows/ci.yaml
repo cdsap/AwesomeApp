@@ -209,4 +209,4 @@ jobs:
                   echo '### Prediction ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
                   value=$(cat capacityGradle)
-                  echo '### Real Value \$value - $value 🚀' >> $GITHUB_STEP_SUMMARY
+                  echo "### Real Value \$value - $value 🚀" >> $GITHUB_STEP_SUMMARY
