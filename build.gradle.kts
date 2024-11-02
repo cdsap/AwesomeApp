@@ -73,7 +73,7 @@ class PublisherModulesWithProcesses : Publisher {
             rowContent["processUsageGradle"] = processUsage!!
             val capacityGradle = report.environment.processesStats.listGradleProcesses.first().capacity
             rowContent["capacityGradle"] = capacityGradle!!
-
+            File("capacityGradle").writeText("$capacityGradle!!")
             val kotlinProcesses = report.environment.processesStats.listKotlinProcesses.count()
             rowContent["kotlinProcesses"] = kotlinProcesses
 

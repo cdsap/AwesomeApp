@@ -33,7 +33,7 @@ jobs:
 
             - name: Check for Cached File
               id: cache
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: project_graph.dot
                   key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
@@ -61,7 +61,7 @@ jobs:
 
             - name: Cache the Generated File
               if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: project_graph.dot
                   key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
@@ -116,7 +116,7 @@ jobs:
 
             - name: Check for Cached File
               id: cache
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: project_graph.dot
                   key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
@@ -206,5 +206,7 @@ jobs:
                   echo "$MY_JSON_SECRET" > key.json
                   echo "the prediction is: $PREDICTION"
                   echo "the prediction2 is: $PREDICTION2"
-                  echo '### $PREDICTION 🚀' >> $GITHUB_STEP_SUMMARY
+                  echo '### Prediction ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
+                  VALUE=$(cat capacityGradle)
+                  echo '### Real Value ${{ VALUE }} 🚀' >> $GITHUB_STEP_SUMMARY
