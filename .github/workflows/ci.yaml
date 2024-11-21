@@ -1,117 +1,208 @@
 name: Build CI
 
 on:
-  schedule:
-      - cron: '0 */3 * * *'
+    push:
+        branches:
+            - test_12
 
 concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: true
+    group: build-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-  newcommit:
-    strategy:
-      matrix:
-        java: [17]
+    generate_cache_key:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                java: [17]
+        timeout-minutes: 60
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+            - name: Generate Cache Key
+              id: generate_cache_key
+              run: |
+                  all_contents=""
+                  while IFS= read -r -d '' file; do
+                    all_contents+=$(cat "$file")
+                  done < <(find . -name "build.gradle.kts" -print0)
+                  cache_key=$(echo -n "$all_contents" | sha256sum | awk '{print $1}')
+                  echo "Cache Key: $cache_key"
+                  echo "::set-output name=cache_key::$cache_key"
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+            - name: Check for Cached File
+              id: cache
+              uses: actions/cache@v4
+              with:
+                  path: project_graph.dot
+                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
+              continue-on-error: true
 
-      - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version:  ${{ matrix.java }}
+            - name: Set up JDK ${{ matrix.java }}
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version: ${{ matrix.java }}
 
-      - name: Execute assemble
-        run: |
-          bash replacer
-          git config user.email inaki.seri@gmail.com
-          git config user.name "inaki"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/cdsap/AwesomeApp
+            - name: Generate File if Cache is Not Found
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: |
+                  echo "Cache not found, generating file..."
+                  ./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=project_graph.dot
+                  cat project_graph.dot
+              env:
+                  MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
+                  INFLUX_URL: ${{ secrets.INFLUX_URL }}
+                  INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+                  INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
+                  CACHE_URL: ${{ secrets.CACHE_URL }}
+                  CI: true
 
-          git add .
-          git commit -m "change $RANDOM"
-          git push origin main
+            - name: Cache the Generated File
+              if: steps.cache.outputs.cache-hit != 'true'
+              uses: actions/cache@v4
+              with:
+                  path: project_graph.dot
+                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
 
+    newcommit:
+        needs: generate_cache_key
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                java: [17]
+        timeout-minutes: 60
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-  assemble:
-    runs-on: "ubuntu-latest"
-    needs: [ newcommit]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+            - name: Set up JDK ${{ matrix.java }}
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version: ${{ matrix.java }}
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version:  17
+            - name: Push Changes
+              run: |
+                  bash replacer
+                  git config user.email inaki.seri@gmail.com
+                  git config user.name "inaki"
+                  git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/cdsap/AwesomeApp
+                  git add .
+                  git commit -m "change $RANDOM"
+                  git push origin main
 
-      - name: Execute assemble
-        run: |
-          echo "$MY_JSON_SECRET" > key.json
-          ./gradlew assembleDebug
-        env:
-            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
-            INFLUX_URL: ${{ secrets.INFLUX_URL }}
-            INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
-            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
-            CACHE_URL: ${{ secrets.CACHE_URL }}
-            CI: true
+    files_that_going_to_be_updated:
+        needs: newcommit
+        runs-on: ubuntu-latest
+        outputs:
+            tasks: ${{ steps.calculate.outputs.tasks }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 2
 
-  lint:
-    runs-on: "ubuntu-latest"
-    needs: [ newcommit]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+            - name: Set up JDK 17
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version: 17
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version:  17
+            - name: Check for Cached File
+              id: cache
+              uses: actions/cache@v4
+              with:
+                  path: project_graph.dot
+                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
 
-      - name: Execute lintRelease
-        run: |
+            - name: Execute Assemble
+              id: calculate
+              run: |
+                  git pull origin test_12
+                  git log -n 2
+                  ./modulesbychange --dot-file project_graph.dot
+                  cat potential_tasks_executed.txt
+                  echo "tasks=$(<potential_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
+    gcloud_query:
+        needs: files_that_going_to_be_updated
+        outputs:
+            task: ${{ steps.gcloud_query.outputs.task }}
+            task2: ${{ steps.gcloud_query.outputs.task2 }}
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+                with:
+                    fetch-depth: 2
 
-          echo "$MY_JSON_SECRET" > key.json
-          ./gradlew lintRelease
-        env:
-            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
-            INFLUX_URL: ${{ secrets.INFLUX_URL }}
-            INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
-            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
-            CACHE_URL: ${{ secrets.CACHE_URL }}
-            CI: true
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v4
+                with:
+                    distribution: 'temurin'
+                    java-version: 17
+            -   id: 'auth'
+                uses: 'google-github-actions/auth@v2'
+                with:
+                    credentials_json: '${{ secrets.PRIVATE_KEY_2 }}'
 
+            -   name: 'Set up Cloud SDK'
+                uses: 'google-github-actions/setup-gcloud@v2'
 
-  testDebug:
-    runs-on: "ubuntu-latest"
-    needs: [ newcommit]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+            -   name: 'Use gcloud CLI'
+                id: "gcloud_query"
+                env:
+                    ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
+                    TASKS: ${{ needs.files_that_going_to_be_updated.outputs.tasks }}
+                run: |
+                    echo "1"
+                    echo $TASKS
+                    echo "${{ needs.files_that_going_to_be_updated.outputs.tasks }}"
+                    curl -X POST \
+                    -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                        "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.predictions_capacityGradle`,( SELECT ${{ needs.files_that_going_to_be_updated.outputs.tasks }} as tasksExecuted));",
+                        "useLegacySql": false
+                      }' \
+                    https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
+                    cat value_predicted
+                    echo "task=$(<value_predicted)" >> "$GITHUB_OUTPUT"
+                    echo "task2=assasa" >> "$GITHUB_OUTPUT"
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version:  17
+    assemble:
+        needs: gcloud_query
+        outputs:
+            task: ${{ steps.gcloud_query.outputs.tasks }}
+            task2: ${{ steps.gcloud_query.outputs.tasks }}
+        runs-on: "ubuntu-latest"
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Execute testDebug
-        run: |
-          echo "$MY_JSON_SECRET" > key.json
-          ./gradlew testDebug
-        env:
-            MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
-            INFLUX_URL: ${{ secrets.INFLUX_URL }}
-            INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
-            INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
-            CACHE_URL: ${{ secrets.CACHE_URL }}
-            CI: true
+            - name: Set up JDK 17
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version:  17
+            - name: Execute assemble
+              env:
+                  PREDICTION: ${{ needs.gcloud_query.outputs.task }}
+                  PREDICTION2: ${{ needs.gcloud_query.outputs.task2 }}
+                  MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
+                  INFLUX_URL: ${{ secrets.INFLUX_URL }}
+                  INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+                  INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
+                  CACHE_URL: ${{ secrets.CACHE_URL }}
+                  CI: true
+              run: |
+                  echo "PREDICTION output: ${{ needs.gcloud_query.outputs.task }}"
+                  echo "PREDICTION2 output: ${{ needs.gcloud_query.outputs.task2 }}"
+                  echo "$MY_JSON_SECRET" > key.json
+                  echo "the prediction is: $PREDICTION"
+                  echo "the prediction2 is: $PREDICTION2"
+                  echo '### Prediction ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
+                  ./gradlew assembleDebug
+                  value=$(cat capacityGradle)
+                  echo "### Real Value \$value - $value 🚀" >> $GITHUB_STEP_SUMMARY

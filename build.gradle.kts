@@ -18,6 +18,7 @@ plugins {
     id("com.android.application") version "8.1.4" apply false
     id("com.android.library") version "8.1.4" apply false
     id("io.github.cdsap.talaiot") version "2.0.4"
+    id("com.jraska.module.graph.assertion") version "2.7.1"
 }
 
 
@@ -26,7 +27,7 @@ talaiot {
         customPublishers(PublisherModulesWithProcesses())
     }
 }
- 
+
 
 class PublisherModulesWithProcesses : Publisher {
     override fun publish(report: ExecutionReport) {
@@ -73,7 +74,7 @@ class PublisherModulesWithProcesses : Publisher {
             rowContent["processUsageGradle"] = processUsage!!
             val capacityGradle = report.environment.processesStats.listGradleProcesses.first().capacity
             rowContent["capacityGradle"] = capacityGradle!!
-
+            File("capacityGradle").writeText("$capacityGradle!!")
             val kotlinProcesses = report.environment.processesStats.listKotlinProcesses.count()
             rowContent["kotlinProcesses"] = kotlinProcesses
 
