@@ -122,7 +122,7 @@ jobs:
             - name: Execute Assemble
               id: calculate
               run: |
-                  git pull origin test_12
+                  git pull origin main
                   git log -n 2
                   ./modulesbychange --dot-file project_graph.dot
                   cat potential_tasks_executed.txt
