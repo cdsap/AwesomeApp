@@ -202,7 +202,7 @@ jobs:
                   echo "$MY_JSON_SECRET" > key.json
                   echo "the prediction is: $PREDICTION"
                   echo "the prediction2 is: $PREDICTION2"
-                  echo '### Prediction ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
+                  echo '### Capacity Prediction ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
                   value=$(cat capacityGradle)
-                  echo "### Real Value \$value - $value 🚀" >> $GITHUB_STEP_SUMMARY
+                  echo "### Capacity Real Value - $value 🚀" >> $GITHUB_STEP_SUMMARY
