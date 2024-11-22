@@ -2,14 +2,17 @@
 
 ROOT_FOLDER="."
 
-# Dynamically get module folders using find
 MODULE_FOLDERS=($(find "$ROOT_FOLDER" -type d -path "*/main/res/values"))
 
-# Randomly select a number of folders to consider (between 1 and the total number of folders)
-NUM_FOLDERS=$((RANDOM % ${#MODULE_FOLDERS[@]} + 1))
+# Calculate the total number of folders
+TOTAL_FOLDERS=${#MODULE_FOLDERS[@]}
 
-# Shuffle the MODULE_FOLDERS array and pick the first NUM_FOLDERS folders
-SELECTED_FOLDERS=($(shuf -e "${MODULE_FOLDERS[@]}" | head -n $NUM_FOLDERS))
+# Randomly decide the maximum number of folders to consider
+# This adds variability, sometimes picking only a few folders
+MAX_FOLDERS=$((RANDOM % TOTAL_FOLDERS / 2 + 1)) # Limit to a random fraction of the total
+
+# Shuffle the list of MODULE_FOLDERS and pick a subset
+SELECTED_FOLDERS=($(shuf -e "${MODULE_FOLDERS[@]}" -n $MAX_FOLDERS))
 
 # Iterate over the selected folders
 for RANDOM_MODULE in "${SELECTED_FOLDERS[@]}"; do
