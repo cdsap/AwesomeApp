@@ -97,6 +97,7 @@ jobs:
         runs-on: ubuntu-latest
         outputs:
             tasks: ${{ steps.calculate.outputs.tasks }}
+            kotlintasks: ${{ steps.calculate.outputs.kotlintasks }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -125,11 +126,12 @@ jobs:
                   ./modulesbychange --dot-file project_graph.dot
                   cat potential_tasks_executed.txt
                   echo "tasks=$(<potential_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
+                  echo "kotlintasks=$(<potential_kotlin_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
     gcloud_query:
         needs: files_that_going_to_be_updated
         outputs:
             task: ${{ steps.gcloud_query.outputs.task }}
-            task2: ${{ steps.gcloud_query.outputs.task2 }}
+            kotlintask: ${{ steps.gcloud_query.outputs.kotlintask }}
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -168,14 +170,25 @@ jobs:
                       }' \
                     https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
                     cat value_predicted
+
+                    curl -X POST \
+                    -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                        "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.predictions_build_kotlin_`,( SELECT ${{ needs.files_that_going_to_be_updated.outputs.kotlintasks }} as tasksKotlinExecuted));",
+                        "useLegacySql": false
+                      }' \
+                    https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted_kotlin
+
                     echo "task=$(<value_predicted)" >> "$GITHUB_OUTPUT"
+                    echo "kotlintask=$(<value_predicted_kotlin)" >> "$GITHUB_OUTPUT"
                     echo "task2=assasa" >> "$GITHUB_OUTPUT"
 
     assemble:
         needs: gcloud_query
         outputs:
             task: ${{ steps.gcloud_query.outputs.tasks }}
-            task2: ${{ steps.gcloud_query.outputs.tasks }}
+            kotlintask: ${{ steps.gcloud_query.outputs.kotlintask }}
         runs-on: "ubuntu-latest"
         steps:
             - name: Checkout
@@ -202,7 +215,10 @@ jobs:
                   echo "$MY_JSON_SECRET" > key.json
                   echo "the prediction is: $PREDICTION"
                   echo "the prediction2 is: $PREDICTION2"
-                  echo '### Capacity Prediction ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
+                  echo '### Capacity Prediction Capacity Gradle ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
+                  echo '### Capacity Prediction Kotlin ${{ needs.gcloud_query.outputs.kotlintask }} 🚀' >> $GITHUB_STEP_SUMMARY
                   ./gradlew assembleDebug
                   value=$(cat capacityGradle)
-                  echo "### Capacity Real Value - $value 🚀" >> $GITHUB_STEP_SUMMARY
+                  valuekotlin=$(cat capacityKotlin)
+                  echo "### Capacity Real Value Capacity Gradle- $value 🚀" >> $GITHUB_STEP_SUMMARY
+                  echo "### Capacity Real Value Capacity Kotlin - valuekotlin 🚀" >> $GITHUB_STEP_SUMMARY

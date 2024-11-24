@@ -82,6 +82,7 @@ class PublisherModulesWithProcesses : Publisher {
                 rowContent["processGTimeKotlin"] = -1
                 rowContent["processUsageKotlin"] = -1
                 rowContent["capacityKotlin"] = -1
+                File("capacityKotlin").writeText("0!!")
             } else {
 
                 val processGCTimeKotlin =
@@ -96,6 +97,8 @@ class PublisherModulesWithProcesses : Publisher {
                     report.environment.processesStats.listKotlinProcesses.sortedBy { it.uptime }
                         .first().capacity
                 rowContent["capacityKotlin"] = capacityKotlin!!
+                File("capacityKotlin").writeText("$capacityKotlin!!")
+
 
             }
             val buildName = report.requestedTasks
