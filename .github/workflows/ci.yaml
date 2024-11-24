@@ -221,4 +221,4 @@ jobs:
                   value=$(cat capacityGradle)
                   valuekotlin=$(cat capacityKotlin)
                   echo "### Capacity Real Value Capacity Gradle- $value 🚀" >> $GITHUB_STEP_SUMMARY
-                  echo "### Capacity Real Value Capacity Kotlin - valuekotlin 🚀" >> $GITHUB_STEP_SUMMARY
+                  echo "### Capacity Real Value Capacity Kotlin - $valuekotlin 🚀" >> $GITHUB_STEP_SUMMARY
