@@ -160,7 +160,8 @@ jobs:
                 run: |
                     echo "1"
                     echo $TASKS
-                    echo "${{ needs.files_that_going_to_be_updated.outputs.tasks }}"
+                    echo "tasks ${{ needs.files_that_going_to_be_updated.outputs.tasks }}"
+                    echo "kotlin tasks ${{ needs.files_that_going_to_be_updated.outputs.kotlintask }}"
                     curl -X POST \
                     -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
                     -H "Content-Type: application/json" \
@@ -182,13 +183,12 @@ jobs:
 
                     echo "task=$(<value_predicted)" >> "$GITHUB_OUTPUT"
                     echo "kotlintask=$(<value_predicted_kotlin)" >> "$GITHUB_OUTPUT"
-                    echo "task2=assasa" >> "$GITHUB_OUTPUT"
 
     assemble:
         needs: gcloud_query
         outputs:
             task: ${{ steps.gcloud_query.outputs.tasks }}
-            kotlintask: ${{ steps.gcloud_query.outputs.kotlintask }}
+            kotlintask: ${{ steps.gcloud_query.outputs.kotlintasks }}
         runs-on: "ubuntu-latest"
         steps:
             - name: Checkout
