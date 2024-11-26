@@ -125,6 +125,7 @@ jobs:
                   cat project_graph.dot
                   ./modulesbychange --dot-file project_graph.dot
                   cat potential_tasks_executed.txt
+                  cat potential_kotlin_tasks_executed.txt
                   echo "tasks=$(<potential_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
                   echo "kotlintasks=$(<potential_kotlin_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
     gcloud_query:
