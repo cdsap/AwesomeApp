@@ -162,7 +162,7 @@ jobs:
                     echo "1"
                     echo $TASKS
                     echo "tasks ${{ needs.files_that_going_to_be_updated.outputs.tasks }}"
-                    echo "kotlin tasks ${{ needs.files_that_going_to_be_updated.outputs.kotlintask }}"
+                    echo "kotlin tasks ${{ needs.files_that_going_to_be_updated.outputs.kotlintasks }}"
                     curl -X POST \
                     -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
                     -H "Content-Type: application/json" \
