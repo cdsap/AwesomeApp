@@ -218,6 +218,7 @@ jobs:
                   echo "the prediction2 is: $PREDICTION2"
                   echo '### Capacity Prediction Capacity Gradle ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
                   echo '### Capacity Prediction Kotlin ${{ needs.gcloud_query.outputs.kotlintask }} 🚀' >> $GITHUB_STEP_SUMMARY
+                  git pull origin main
                   ./gradlew assembleDebug
                   value=$(cat capacityGradle)
                   valuekotlin=$(cat capacityKotlin)
