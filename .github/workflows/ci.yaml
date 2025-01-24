@@ -186,7 +186,7 @@ jobs:
                     echo "kotlintask=$(<value_predicted_kotlin)" >> "$GITHUB_OUTPUT"
 
     assemble:
-        needs: gcloud_query, files_that_going_to_be_updated
+        needs: [gcloud_query, files_that_going_to_be_updated]
         outputs:
             task: ${{ steps.gcloud_query.outputs.tasks }}
             kotlintask: ${{ steps.gcloud_query.outputs.kotlintasks }}
