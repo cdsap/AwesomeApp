@@ -186,7 +186,7 @@ jobs:
                     echo "kotlintask=$(<value_predicted_kotlin)" >> "$GITHUB_OUTPUT"
 
     assemble:
-        needs: gcloud_query
+        needs: gcloud_query, files_that_going_to_be_updated
         outputs:
             task: ${{ steps.gcloud_query.outputs.tasks }}
             kotlintask: ${{ steps.gcloud_query.outputs.kotlintasks }}
@@ -211,6 +211,8 @@ jobs:
                   CACHE_URL: ${{ secrets.CACHE_URL }}
                   CI: true
               run: |
+                  gradle_prediction=${{ needs.gcloud_query.outputs.task }}
+                  kotlin_prediction=${{ needs.gcloud_query.outputs.kotlintask }}
                   echo "PREDICTION output: ${{ needs.gcloud_query.outputs.task }}"
                   echo "PREDICTION2 output: ${{ needs.gcloud_query.outputs.task2 }}"
                   echo "$MY_JSON_SECRET" > key.json
@@ -221,6 +223,19 @@ jobs:
                   git pull origin main
                   ./gradlew assembleDebug
                   value=$(cat capacityGradle)
+                  tasks_executed=$(cat tasks_executed)
+                  kotlin_tasks_executed=$(cat kotlin_tasks_executed)
+                  predicted_tasks_executed=${{ needs.files_that_going_to_be_updated.outputs.tasks }}
+                  predicted_kotlin_tasks_executed=${{ needs.files_that_going_to_be_updated.outputs.kotlintasks }}
                   valuekotlin=$(cat capacityKotlin)
                   echo "### Capacity Real Value Capacity Gradle- $value 🚀" >> $GITHUB_STEP_SUMMARY
                   echo "### Capacity Real Value Capacity Kotlin - $valuekotlin 🚀" >> $GITHUB_STEP_SUMMARY
+
+                  curl -X POST \
+                      -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
+                      -H "Content-Type: application/json" \
+                      -d '{
+                            "query": "INSERT INTO `cache-node.mobile_build_metrics.predictions_results` (capacity_gradle, predicted_gradle, capacity_kotlin, predicted_kotlin, total_tasks_executed, predicted_tasks_executed, total_kotlin_tasks_executed, predicted_kotlin_tasks_executed, created_at) VALUES ($value, $gradle_prediction, $valuekotlin, $kotlin_prediction, $tasks_executed, $predicted_tasks_executed, $kotlin_tasks_executed, $predicted_kotlin_tasks_executed, CURRENT_TIMESTAMP());",
+                            "useLegacySql": false
+                      }' \
+                     https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries

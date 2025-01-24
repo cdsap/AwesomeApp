@@ -51,7 +51,7 @@ class PublisherModulesWithProcesses : Publisher {
             val tasksExecuted =
                 report.tasks?.filter { it.state == TaskMessageState.EXECUTED }?.count()
             rowContent["tasksExecuted"] = tasksExecuted!!
-            println("tasks executed in talaiot: "+tasksExecuted)
+            File("tasks_executed").writeText("$tasksExecuted")
             val tasksFromCache =
                 report.tasks?.filter { it.state == TaskMessageState.FROM_CACHE }?.count()
             rowContent["tasksFromCache"] = tasksFromCache!!
@@ -65,7 +65,7 @@ class PublisherModulesWithProcesses : Publisher {
             val tasksKotlinExecutedDuration =
                 report.tasks?.filter { it.type == "org.jetbrains.kotlin.gradle.tasks.KotlinCompile" && it.state == TaskMessageState.EXECUTED }
                     ?.sumOf { it.ms }
-            println("tasksKotlinExecuted executed in talaiot: "+tasksKotlinExecuted)
+            File("kotlin_tasks_executed").writeText("$tasksKotlinExecuted")
             rowContent["tasksKotlinExecutedDuration"] = tasksKotlinExecutedDuration!!
 
             rowContent["gradleProcesses"] =
