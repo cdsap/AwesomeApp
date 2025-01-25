@@ -202,6 +202,7 @@ jobs:
                   java-version:  17
             - name: Execute assemble
               env:
+                  ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
                   PREDICTION: ${{ needs.gcloud_query.outputs.task }}
                   PREDICTION2: ${{ needs.gcloud_query.outputs.task2 }}
                   MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
