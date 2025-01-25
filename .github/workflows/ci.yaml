@@ -239,15 +239,9 @@ jobs:
                   valuekotlin=$(cat capacityKotlin)
                   echo "### Capacity Real Value Capacity Gradle- $value 🚀" >> $GITHUB_STEP_SUMMARY
                   echo "### Capacity Real Value Capacity Kotlin - $valuekotlin 🚀" >> $GITHUB_STEP_SUMMARY
-                  query="INSERT INTO `cache-node.mobile_build_metrics.results_prediction` (capacity_gradle, predicted_gradle, capacity_kotlin, predicted_kotlin, total_tasks_executed, predicted_tasks_executed, total_kotlin_tasks_executed, predicted_kotlin_tasks_executed, created_at) VALUES ('$value', '$gradle_prediction', '$valuekotlin', '$kotlin_prediction', '$tasks_executed', '$predicted_tasks_executed', '$kotlin_tasks_executed', '$predicted_kotlin_tasks_executed', CURRENT_TIMESTAMP());"
-
-                  curl -X POST \
-                    -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
-                    -H "Content-Type: application/json" \
-                    -d '{
-                    "query": $query,
-                    "useLegacySql": false
-                    }' \
-                    https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries
+                  curl -X POST -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" -H "Content-Type: application/json" -d '{
+                      "query": "INSERT INTO `cache-node.mobile_build_metrics.results_prediction`  (capacity_gradle, predicted_gradle, capacity_kotlin, predicted_kotlin, total_tasks_executed, predicted_tasks_executed, total_kotlin_tasks_executed, predicted_kotlin_tasks_executed, created_at) VALUES ( \"'$value'\", \"'$gradle_prediction'\", \"'$valuekotlin'\", \"'$kotlin_prediction'\", \"'$tasks_executed'\", \"'$predicted_tasks_executed'\", \"'$kotlin_tasks_executed'\", \"'$predicted_kotlin_tasks_executed'\", CURRENT_TIMESTAMP());",
+                                  "useLegacySql": false
+                       }' https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries
 
 
