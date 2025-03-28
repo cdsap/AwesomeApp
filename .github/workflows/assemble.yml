@@ -15,6 +15,19 @@ on:
       kotlintasks:
         required: true
         type: string
+    outputs:
+      value:
+        description: "Capacity Gradle value"
+        value: ${{ jobs.assemble.outputs.value }}
+      valuekotlin:
+        description: "Capacity Kotlin value"
+        value: ${{ jobs.assemble.outputs.valuekotlin }}
+      tasks_executed:
+        description: "Tasks executed"
+        value: ${{ jobs.assemble.outputs.tasks_executed }}
+      kotlin_tasks_executed:
+        description: "Kotlin tasks executed"
+        value: ${{ jobs.assemble.outputs.kotlin_tasks_executed }}
     secrets:
       PRIVATE_KEY_2:
         required: true
@@ -32,6 +45,11 @@ on:
 jobs:
   assemble:
     runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.execute.outputs.value }}
+      valuekotlin: ${{ steps.execute.outputs.valuekotlin }}
+      tasks_executed: ${{ steps.execute.outputs.tasks_executed }}
+      kotlin_tasks_executed: ${{ steps.execute.outputs.kotlin_tasks_executed }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,6 +61,7 @@ jobs:
           java-version: 17
 
       - name: Execute assemble
+        id: execute
         env:
           PREDICTION: ${{ inputs.task }}
           PREDICTION2: ${{ inputs.kotlintask }}
@@ -72,6 +91,10 @@ jobs:
           valuekotlin=$(cat capacityKotlin)
           echo "### Capacity Real Value Capacity Gradle- $value 🚀" >> $GITHUB_STEP_SUMMARY
           echo "### Capacity Real Value Capacity Kotlin - $valuekotlin 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "value=$value" >> "$GITHUB_OUTPUT"
+          echo "valuekotlin=$valuekotlin" >> "$GITHUB_OUTPUT"
+          echo "tasks_executed=$tasks_executed" >> "$GITHUB_OUTPUT"
+          echo "kotlin_tasks_executed=$kotlin_tasks_executed" >> "$GITHUB_OUTPUT"
 
   store_metrics:
     needs: assemble

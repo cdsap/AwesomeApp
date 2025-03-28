@@ -19,18 +19,28 @@ jobs:
         secrets: inherit
 
     files_that_going_to_be_updated:
-        needs: newcommit
+        needs: [newcommit, generate_cache_key]
         uses: ./.github/workflows/file-changes.yml
+        with:
+            cache_key: ${{ needs.generate_cache_key.outputs.cache_key }}
         secrets: inherit
 
     gcloud_query:
         needs: files_that_going_to_be_updated
         uses: ./.github/workflows/gcloud-query.yml
+        with:
+            tasks: ${{ needs.files_that_going_to_be_updated.outputs.tasks }}
+            kotlintasks: ${{ needs.files_that_going_to_be_updated.outputs.kotlintasks }}
         secrets: inherit
 
     assemble:
         needs: [gcloud_query, files_that_going_to_be_updated]
         uses: ./.github/workflows/assemble.yml
+        with:
+            task: ${{ needs.gcloud_query.outputs.task }}
+            kotlintask: ${{ needs.gcloud_query.outputs.kotlintask }}
+            tasks: ${{ needs.files_that_going_to_be_updated.outputs.tasks }}
+            kotlintasks: ${{ needs.files_that_going_to_be_updated.outputs.kotlintasks }}
         secrets: inherit
 
 
