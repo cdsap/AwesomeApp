@@ -1,0 +1,48 @@
+name: Detect File Changes
+
+on:
+  workflow_call:
+    outputs:
+      tasks:
+        description: "Tasks to be executed"
+        value: ${{ jobs.detect_changes.outputs.tasks }}
+      kotlintasks:
+        description: "Kotlin tasks to be executed"
+        value: ${{ jobs.detect_changes.outputs.kotlintasks }}
+
+jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      tasks: ${{ steps.calculate.outputs.tasks }}
+      kotlintasks: ${{ steps.calculate.outputs.kotlintasks }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Check for Cached File
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: project_graph.dot
+          key: gradle-cache-file-${{ needs.generate_cache_key.outputs.cache_key }}
+
+      - name: Execute Assemble
+        id: calculate
+        run: |
+          git pull origin main
+          git log -n 2
+          cat project_graph.dot
+          ./modulesbychange --dot-file project_graph.dot
+          cat potential_tasks_executed.txt
+          cat potential_kotlin_tasks_executed.txt
+          echo "tasks=$(<potential_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
+          echo "kotlintasks=$(<potential_kotlin_tasks_executed.txt)" >> "$GITHUB_OUTPUT" 

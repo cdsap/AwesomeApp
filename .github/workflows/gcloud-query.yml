@@ -1,0 +1,79 @@
+name: Google Cloud Query
+
+on:
+  workflow_call:
+    inputs:
+      tasks:
+        required: true
+        type: string
+      kotlintasks:
+        required: true
+        type: string
+    outputs:
+      task:
+        description: "Predicted task value"
+        value: ${{ jobs.query.outputs.task }}
+      kotlintask:
+        description: "Predicted Kotlin task value"
+        value: ${{ jobs.query.outputs.kotlintask }}
+    secrets:
+      PRIVATE_KEY_2:
+        required: true
+
+jobs:
+  query:
+    runs-on: ubuntu-latest
+    outputs:
+      task: ${{ steps.gcloud_query.outputs.task }}
+      kotlintask: ${{ steps.gcloud_query.outputs.kotlintask }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.PRIVATE_KEY_2 }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: 'Use gcloud CLI'
+        id: "gcloud_query"
+        env:
+          ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
+          TASKS: ${{ inputs.tasks }}
+        run: |
+          echo "1"
+          echo $TASKS
+          echo "tasks ${{ inputs.tasks }}"
+          echo "kotlin tasks ${{ inputs.kotlintasks }}"
+          curl -X POST \
+          -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+              "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.predictions_capacityGradle`,( SELECT ${{ inputs.tasks }} as tasksExecuted));",
+              "useLegacySql": false
+            }' \
+          https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
+          cat value_predicted
+
+          curl -X POST \
+          -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+              "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.predictions_build_kotlin_`,( SELECT ${{ inputs.kotlintasks }} as tasksKotlinExecuted));",
+              "useLegacySql": false
+            }' \
+          https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted_kotlin
+
+          echo "task=$(<value_predicted)" >> "$GITHUB_OUTPUT"
+          echo "kotlintask=$(<value_predicted_kotlin)" >> "$GITHUB_OUTPUT" 

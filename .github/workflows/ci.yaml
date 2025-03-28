@@ -10,238 +10,27 @@ concurrency:
 
 jobs:
     generate_cache_key:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                java: [17]
-        timeout-minutes: 60
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-
-            - name: Generate Cache Key
-              id: generate_cache_key
-              run: |
-                  all_contents=""
-                  while IFS= read -r -d '' file; do
-                    all_contents+=$(cat "$file")
-                  done < <(find . -name "build.gradle.kts" -print0)
-                  cache_key=$(echo -n "$all_contents" | sha256sum | awk '{print $1}')
-                  echo "Cache Key: $cache_key"
-                  echo "::set-output name=cache_key::$cache_key"
-
-            - name: Check for Cached File
-              id: cache
-              uses: actions/cache@v4
-              with:
-                  path: project_graph.dot
-                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
-              continue-on-error: true
-
-            - name: Set up JDK ${{ matrix.java }}
-              uses: actions/setup-java@v4
-              with:
-                  distribution: 'temurin'
-                  java-version: ${{ matrix.java }}
-
-            - name: Generate File if Cache is Not Found
-              if: steps.cache.outputs.cache-hit != 'true'
-              run: |
-                  echo "Cache not found, generating file..."
-                  ./gradlew generateModulesGraphvizText -Pmodules.graph.output.gv=project_graph.dot
-                  cat project_graph.dot
-              env:
-                  MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
-                  INFLUX_URL: ${{ secrets.INFLUX_URL }}
-                  INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
-                  INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
-                  CACHE_URL: ${{ secrets.CACHE_URL }}
-                  CI: true
-
-            - name: Cache the Generated File
-              if: steps.cache.outputs.cache-hit != 'true'
-              uses: actions/cache@v4
-              with:
-                  path: project_graph.dot
-                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
+        uses: ./.github/workflows/cache-key.yml
+        secrets: inherit
 
     newcommit:
         needs: generate_cache_key
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                java: [17]
-        timeout-minutes: 60
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-
-            - name: Set up JDK ${{ matrix.java }}
-              uses: actions/setup-java@v4
-              with:
-                  distribution: 'temurin'
-                  java-version: ${{ matrix.java }}
-
-            - name: Push Changes
-              run: |
-                  bash replacer
-                  git config user.email "github-actions[bot]@users.noreply.github.com"
-                  git config user.name "github-actions[bot]"
-                  git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/cdsap/AwesomeApp
-                  git add .
-                  git commit -m "change $RANDOM"
-                  git push origin main
+        uses: ./.github/workflows/commit.yml
+        secrets: inherit
 
     files_that_going_to_be_updated:
         needs: newcommit
-        runs-on: ubuntu-latest
-        outputs:
-            tasks: ${{ steps.calculate.outputs.tasks }}
-            kotlintasks: ${{ steps.calculate.outputs.kotlintasks }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 2
+        uses: ./.github/workflows/file-changes.yml
+        secrets: inherit
 
-            - name: Set up JDK 17
-              uses: actions/setup-java@v4
-              with:
-                  distribution: 'temurin'
-                  java-version: 17
-
-            - name: Check for Cached File
-              id: cache
-              uses: actions/cache@v4
-              with:
-                  path: project_graph.dot
-                  key: gradle-cache-file-${{ steps.generate_cache_key.outputs.cache_key }}
-
-            - name: Execute Assemble
-              id: calculate
-              run: |
-                  git pull origin main
-                  git log -n 2
-                  cat project_graph.dot
-                  ./modulesbychange --dot-file project_graph.dot
-                  cat potential_tasks_executed.txt
-                  cat potential_kotlin_tasks_executed.txt
-                  echo "tasks=$(<potential_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
-                  echo "kotlintasks=$(<potential_kotlin_tasks_executed.txt)" >> "$GITHUB_OUTPUT"
     gcloud_query:
         needs: files_that_going_to_be_updated
-        outputs:
-            task: ${{ steps.gcloud_query.outputs.task }}
-            kotlintask: ${{ steps.gcloud_query.outputs.kotlintask }}
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v4
-                with:
-                    fetch-depth: 2
-
-            -   name: Set up JDK 17
-                uses: actions/setup-java@v4
-                with:
-                    distribution: 'temurin'
-                    java-version: 17
-            -   id: 'auth'
-                uses: 'google-github-actions/auth@v2'
-                with:
-                    credentials_json: '${{ secrets.PRIVATE_KEY_2 }}'
-
-            -   name: 'Set up Cloud SDK'
-                uses: 'google-github-actions/setup-gcloud@v2'
-
-            -   name: 'Use gcloud CLI'
-                id: "gcloud_query"
-                env:
-                    ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
-                    TASKS: ${{ needs.files_that_going_to_be_updated.outputs.tasks }}
-                run: |
-                    echo "1"
-                    echo $TASKS
-                    echo "tasks ${{ needs.files_that_going_to_be_updated.outputs.tasks }}"
-                    echo "kotlin tasks ${{ needs.files_that_going_to_be_updated.outputs.kotlintasks }}"
-                    curl -X POST \
-                    -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
-                    -H "Content-Type: application/json" \
-                    -d '{
-                        "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.predictions_capacityGradle`,( SELECT ${{ needs.files_that_going_to_be_updated.outputs.tasks }} as tasksExecuted));",
-                        "useLegacySql": false
-                      }' \
-                    https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted
-                    cat value_predicted
-
-                    curl -X POST \
-                    -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" \
-                    -H "Content-Type: application/json" \
-                    -d '{
-                        "query": "SELECT * FROM ML.PREDICT(MODEL `cache-node.mobile_build_metrics.predictions_build_kotlin_`,( SELECT ${{ needs.files_that_going_to_be_updated.outputs.kotlintasks }} as tasksKotlinExecuted));",
-                        "useLegacySql": false
-                      }' \
-                    https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries | jq  -r '.rows[0].f[0].v' > value_predicted_kotlin
-
-                    echo "task=$(<value_predicted)" >> "$GITHUB_OUTPUT"
-                    echo "kotlintask=$(<value_predicted_kotlin)" >> "$GITHUB_OUTPUT"
+        uses: ./.github/workflows/gcloud-query.yml
+        secrets: inherit
 
     assemble:
         needs: [gcloud_query, files_that_going_to_be_updated]
-        outputs:
-            task: ${{ steps.gcloud_query.outputs.tasks }}
-            kotlintask: ${{ steps.gcloud_query.outputs.kotlintasks }}
-        runs-on: "ubuntu-latest"
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-
-            - name: Set up JDK 17
-              uses: actions/setup-java@v4
-              with:
-                  distribution: 'temurin'
-                  java-version:  17
-            -   id: 'auth'
-                uses: 'google-github-actions/auth@v2'
-                with:
-                    credentials_json: '${{ secrets.PRIVATE_KEY_2 }}'
-
-            -   name: 'Set up Cloud SDK'
-                uses: 'google-github-actions/setup-gcloud@v2'
-
-            - name: Execute assemble
-              env:
-                  ACCESS_TOKEN: $(gcloud auth application-default print-access-token)
-                  PREDICTION: ${{ needs.gcloud_query.outputs.task }}
-                  PREDICTION2: ${{ needs.gcloud_query.outputs.task2 }}
-                  MY_JSON_SECRET: ${{ secrets.MY_JSON_SECRET }}
-                  INFLUX_URL: ${{ secrets.INFLUX_URL }}
-                  INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
-                  INFLUX1_URL: ${{ secrets.INFLUX1_URL }}
-                  CACHE_URL: ${{ secrets.CACHE_URL }}
-                  CI: true
-              run: |
-                  gradle_prediction=${{ needs.gcloud_query.outputs.task }}
-                  kotlin_prediction=${{ needs.gcloud_query.outputs.kotlintask }}
-                  echo "PREDICTION output: ${{ needs.gcloud_query.outputs.task }}"
-                  echo "PREDICTION2 output: ${{ needs.gcloud_query.outputs.task2 }}"
-                  echo "$MY_JSON_SECRET" > key.json
-                  echo "the prediction is: $PREDICTION"
-                  echo "the prediction2 is: $PREDICTION2"
-                  echo '### Capacity Prediction Capacity Gradle ${{ needs.gcloud_query.outputs.task }} 🚀' >> $GITHUB_STEP_SUMMARY
-                  echo '### Capacity Prediction Kotlin ${{ needs.gcloud_query.outputs.kotlintask }} 🚀' >> $GITHUB_STEP_SUMMARY
-                  git pull origin main
-                  ./gradlew assembleDebug
-                  value=$(cat capacityGradle)
-                  tasks_executed=$(cat tasks_executed)
-                  kotlin_tasks_executed=$(cat kotlin_tasks_executed)
-                  predicted_tasks_executed=${{ needs.files_that_going_to_be_updated.outputs.tasks }}
-                  predicted_kotlin_tasks_executed=${{ needs.files_that_going_to_be_updated.outputs.kotlintasks }}
-                  valuekotlin=$(cat capacityKotlin)
-                  echo "### Capacity Real Value Capacity Gradle- $value 🚀" >> $GITHUB_STEP_SUMMARY
-                  echo "### Capacity Real Value Capacity Kotlin - $valuekotlin 🚀" >> $GITHUB_STEP_SUMMARY
-                  curl -X POST -H "Authorization: Bearer ${{ env.ACCESS_TOKEN }}" -H "Content-Type: application/json" -d '{
-                      "query": "INSERT INTO `cache-node.mobile_build_metrics.results_prediction`  (capacity_gradle, predicted_gradle, capacity_kotlin, predicted_kotlin, total_tasks_executed, predicted_tasks_executed, total_kotlin_tasks_executed, predicted_kotlin_tasks_executed, created_at) VALUES ( \"'$value'\", \"'$gradle_prediction'\", \"'$valuekotlin'\", \"'$kotlin_prediction'\", \"'$tasks_executed'\", \"'$predicted_tasks_executed'\", \"'$kotlin_tasks_executed'\", \"'$predicted_kotlin_tasks_executed'\", CURRENT_TIMESTAMP());",
-                                  "useLegacySql": false
-                       }' https://bigquery.googleapis.com/bigquery/v2/projects/cache-node/queries
+        uses: ./.github/workflows/assemble.yml
+        secrets: inherit
 
 
