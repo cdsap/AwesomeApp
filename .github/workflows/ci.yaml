@@ -1,8 +1,9 @@
 name: Build CI
 
 on:
-    schedule:
-        - cron: '0 */2 * * *'
+    push:
+        branches:
+            - main
 
 concurrency:
     group: build-${{ github.ref }}
